@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "164491716587",
+    "project_id": "epharmacy-c8fe8",
+    "storage_bucket": "epharmacy-c8fe8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164491716587:android:ecda06123a24584b949bae",
+        "android_client_info": {
+          "package_name": "com.example.epharmacy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJmpWLtRVb0eqD9aUWVajCM-RUrqaOZoE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
