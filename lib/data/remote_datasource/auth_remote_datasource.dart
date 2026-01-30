@@ -59,6 +59,40 @@ class AuthRemoteDatasource {
           ],
         ),
       );
+    } catch (e) {
+      if (e == 'email already in used') {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error Occured'),
+            content: Text('Email already in use'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error Occured'),
+            content: Text('Error: $e'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
     }
+  }
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
   }
 }
