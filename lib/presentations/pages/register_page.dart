@@ -1,4 +1,6 @@
+import 'package:epharmacy/cubits/auth/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -8,9 +10,10 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final GlobalKey _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _passwordConfirmationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +21,28 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Text('Signin'),
+        title: Text('Register Page'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 25),
           child: Form(
             key: _formKey,
             child: Column(
               children: [
                 SizedBox(height: 32),
-                Center(child: Icon(Icons.person, size: 80)),
+                Center(
+                  child: Icon(
+                    Icons.medical_services_rounded,
+                    color: Colors.red,
+                    size: 80,
+                  ),
+                ),
                 SizedBox(height: 32),
                 TextFormField(
                   controller: _emailController,
                   enableSuggestions: true,
-                  keyboardType: TextInputType.visiblePassword,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -72,15 +82,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     alignLabelWithHint: true,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty || value.length < 6) {
-                      return 'Password is too';
+                    if (value!.isEmpty) {
+                      return 'Password is empty';
+                    } else if (value.length < 2) {
+                      return 'Password is to short';
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 32),
                 TextFormField(
-                  controller: _passwordController,
+                  controller: _passwordConfirmationController,
                   enableSuggestions: true,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
@@ -106,13 +118,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 Divider(thickness: 2),
                 Center(
                   child: GestureDetector(
-                    onTap: () => Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()),
-                      (route) => false,
-                    ),
+                    onTap: () => Navigator.pop(context),
                     child: Text(
                       'All ready have and account? Signin',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 25,
@@ -121,12 +130,41 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 300,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Register'),
+                BlocListener<AuthCubit, AuthState>(
+                  listenWhen: (previous, current) =>
+                      previous.status != current.status,
+                  listener: (context, state) {
+                    if (state.status == AuthStatus.failure) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            state.errorMessage ?? 'Authentication Error',
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<AuthCubit>().signUp(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+                          Navigator.pop(context);
+                        } else {
+                          null;
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.red,
+                      ),
+                      child: Text('Register'),
+                    ),
                   ),
                 ),
               ],

@@ -1,94 +1,35 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class AuthRemoteDatasource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Stream<User?> get authStatechange => _firebaseAuth.authStateChanges();
 
-  Future<void> signInWithEmailAndPassword(
+  Future<UserCredential> signInWithEmailAndPassword(
     String email,
     String password,
-    BuildContext context,
   ) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
+      return await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      if (!context.mounted) return;
-      await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error Occured'),
-          content: Text(e.toString()),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Ok'),
-            ),
-          ],
-        ),
-      );
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<void> signupWithEmailAndPassword(
+  Future<UserCredential> signupWithEmailAndPassword(
     String email,
     String password,
-    BuildContext context,
   ) async {
     try {
-      _firebaseAuth.createUserWithEmailAndPassword(
+      return await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      if (!context.mounted) return;
-      await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error Occured'),
-          content: Text(e.toString()),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Ok'),
-            ),
-          ],
-        ),
-      );
     } catch (e) {
-      if (e == 'email already in used') {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Error Occured'),
-            content: Text('Email already in use'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Ok'),
-              ),
-            ],
-          ),
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Error Occured'),
-            content: Text('Error: $e'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Ok'),
-              ),
-            ],
-          ),
-        );
-      }
+      rethrow;
     }
   }
 

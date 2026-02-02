@@ -1,5 +1,8 @@
+import 'package:epharmacy/cubits/auth/auth_cubit.dart';
+import 'package:epharmacy/presentations/pages/main_page.dart';
 import 'package:epharmacy/presentations/pages/register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -9,7 +12,7 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> {
-  final GlobalKey _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -19,16 +22,23 @@ class _SigninPageState extends State<SigninPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Text('SigninPage'),
+        title: Text('Signin Page'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 25),
           child: Form(
             key: _formKey,
             child: Column(
               children: [
                 SizedBox(height: 32),
-                Center(child: Icon(Icons.person, size: 80)),
+                Center(
+                  child: Icon(
+                    Icons.medical_services_rounded,
+                    color: Colors.red,
+                    size: 80,
+                  ),
+                ),
                 SizedBox(height: 32),
                 TextFormField(
                   controller: _emailController,
@@ -79,13 +89,14 @@ class _SigninPageState extends State<SigninPage> {
                     return null;
                   },
                 ),
+                SizedBox(height: 20),
                 Divider(thickness: 2),
+                SizedBox(height: 20),
                 Center(
                   child: GestureDetector(
-                    onTap: () => Navigator.pushAndRemoveUntil(
+                    onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => RegisterPage()),
-                      (route) => false,
                     ),
                     child: Text(
                       'No account? Register',
@@ -97,10 +108,47 @@ class _SigninPageState extends State<SigninPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 300,
-                  height: 50,
-                  child: ElevatedButton(onPressed: () {}, child: Text('Login')),
+                SizedBox(height: 20),
+                BlocListener<AuthCubit, AuthState>(
+                  listenWhen: (previous, current) =>
+                      previous.status != current.status,
+                  listener: (context, state) {
+                    if (state.status == AuthStatus.failure) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            state.errorMessage ?? 'Authentication Error',
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<AuthCubit>().signIn(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainPage()),
+                            (route) => false,
+                          );
+                        } else {
+                          null;
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.red,
+                      ),
+                      child: Text('Login'),
+                    ),
+                  ),
                 ),
               ],
             ),
