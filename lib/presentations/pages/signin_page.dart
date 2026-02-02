@@ -1,4 +1,4 @@
-import 'package:epharmacy/cubits/auth/auth_cubit.dart';
+import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/pages/main_page.dart';
 import 'package:epharmacy/presentations/pages/register_page.dart';
 import 'package:flutter/material.dart';

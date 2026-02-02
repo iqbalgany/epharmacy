@@ -1,4 +1,4 @@
-import 'package:epharmacy/cubits/auth/auth_cubit.dart';
+import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/data/remote_datasource/auth_remote_datasource.dart';
 import 'package:epharmacy/firebase_options.dart';
 import 'package:epharmacy/presentations/pages/signin_page.dart';
