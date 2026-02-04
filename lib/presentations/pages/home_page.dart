@@ -1,3 +1,5 @@
+import 'package:epharmacy/presentations/widgets/category_widget.dart';
+import 'package:epharmacy/presentations/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,8 +15,9 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 50),
             Card(
               elevation: 1,
+              color: Colors.white,
               child: SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.99,
+                height: MediaQuery.sizeOf(context).height * 0.07,
                 child: TextField(
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -31,6 +34,34 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 16),
+            CategoryWidget(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Products',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'See All',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(padding: const EdgeInsets.all(8.0), child: ProductWidget()),
           ],
         ),
       ),

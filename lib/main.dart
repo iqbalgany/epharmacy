@@ -1,7 +1,11 @@
-import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/data/remote_datasource/auth_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/categories_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/product_remote_datasource.dart';
 import 'package:epharmacy/firebase_options.dart';
-import 'package:epharmacy/presentations/pages/signin_page.dart';
+import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
+import 'package:epharmacy/presentations/cubits/categories/categories_cubit.dart';
+import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
+import 'package:epharmacy/presentations/pages/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,11 +24,17 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AuthCubit(AuthRemoteDatasource())),
+        BlocProvider(
+          create: (context) => CategoriesCubit(CategoriesRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => ProductCubit(ProductRemoteDatasource()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-        home: SigninPage(),
+        home: MainPage(),
       ),
     );
   }
