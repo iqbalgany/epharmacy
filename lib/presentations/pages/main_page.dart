@@ -1,7 +1,7 @@
-import 'package:epharmacy/presentations/pages/cart_page.dart';
-import 'package:epharmacy/presentations/pages/favorite_page.dart';
-import 'package:epharmacy/presentations/pages/home_page.dart';
-import 'package:epharmacy/presentations/pages/profile_page.dart';
+import 'package:epharmacy/presentations/pages/cart/cart_page.dart';
+import 'package:epharmacy/presentations/pages/favorite/favorite_page.dart';
+import 'package:epharmacy/presentations/pages/product/home_page.dart';
+import 'package:epharmacy/presentations/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {

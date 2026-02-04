@@ -1,6 +1,6 @@
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
+import 'package:epharmacy/presentations/pages/auth/register_page.dart';
 import 'package:epharmacy/presentations/pages/main_page.dart';
-import 'package:epharmacy/presentations/pages/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

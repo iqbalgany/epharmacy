@@ -10,14 +10,16 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 50),
-            Card(
-              elevation: 1,
-              color: Colors.white,
-              child: SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.07,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: TextField(
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -29,16 +31,13 @@ class HomePage extends StatelessWidget {
                     suffixIcon: Icon(Icons.tune),
                     hintText: 'Search Product',
                     hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-                    contentPadding: EdgeInsets.only(top: 12),
+                    contentPadding: EdgeInsets.all(12),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 16),
-            CategoryWidget(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
+              SizedBox(height: 16),
+              CategoryWidget(),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -60,9 +59,9 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            Padding(padding: const EdgeInsets.all(8.0), child: ProductWidget()),
-          ],
+              ProductWidget(),
+            ],
+          ),
         ),
       ),
     );

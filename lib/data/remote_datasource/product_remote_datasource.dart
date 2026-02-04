@@ -20,4 +20,34 @@ class ProductRemoteDatasource {
           }).toList();
         });
   }
+
+  Stream<ProductModel> getProductById(String productId) {
+    return _firebaseFirestore
+        .collection(FirebaseConstans.products)
+        .doc(productId)
+        .snapshots()
+        .map((snapshot) {
+          return ProductModel.fromMap(snapshot.data() as Map<String, dynamic>);
+        });
+  }
+
+  Stream<List<ProductModel>> getProductByCategory(String categoryName) {
+    CollectionReference productCollection = _firebaseFirestore.collection(
+      FirebaseConstans.products,
+    );
+
+    Query query = productCollection;
+
+    if (categoryName != 'All') {
+      query = query.where('categoryName', isEqualTo: categoryName);
+    }
+
+    return query.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        data['productId'] = doc.id;
+        return ProductModel.fromMap(data);
+      }).toList();
+    });
+  }
 }

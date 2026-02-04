@@ -22,11 +22,15 @@ class ProductCubit extends Cubit<ProductState> {
 
     _productsSubscription = _productRemoteDatasource.getProducts().listen(
       (productData) {
+        if (isClosed) return;
+
         emit(
           state.copyWith(status: ProductStatus.success, products: productData),
         );
       },
       onError: (error) {
+        if (isClosed) return;
+
         emit(
           state.copyWith(
             status: ProductStatus.error,
@@ -35,6 +39,65 @@ class ProductCubit extends Cubit<ProductState> {
         );
       },
     );
+  }
+
+  void getProductById(String productId) {
+    emit(state.copyWith(status: ProductStatus.loading));
+
+    _productsSubscription?.cancel();
+
+    _productsSubscription = _productRemoteDatasource
+        .getProductById(productId)
+        .listen(
+          (productData) {
+            if (isClosed) return;
+
+            emit(
+              state.copyWith(
+                status: ProductStatus.success,
+                product: productData,
+              ),
+            );
+          },
+          onError: (error) {
+            if (isClosed) return;
+
+            emit(
+              state.copyWith(
+                status: ProductStatus.error,
+                errorMessage: error.toString(),
+              ),
+            );
+          },
+        );
+  }
+
+  void getProductByCategory(String categoryName) {
+    emit(state.copyWith(status: ProductStatus.loading));
+
+    _productsSubscription?.cancel();
+
+    _productsSubscription = _productRemoteDatasource
+        .getProductByCategory(categoryName)
+        .listen(
+          (products) {
+            if (isClosed) return;
+
+            emit(
+              state.copyWith(status: ProductStatus.success, products: products),
+            );
+          },
+          onError: (error) {
+            if (isClosed) return;
+
+            emit(
+              state.copyWith(
+                status: ProductStatus.error,
+                errorMessage: error.toString(),
+              ),
+            );
+          },
+        );
   }
 
   @override
