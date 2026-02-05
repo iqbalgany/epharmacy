@@ -42,7 +42,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         });
 
         return SizedBox(
-          height: 80,
+          height: 50,
           child: ListView.builder(
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),
@@ -52,7 +52,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               final category = sortedCategories[index];
               final isSelected = _selectedCategoryIndex == index;
               return InkWell(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
                 onTap: () {
                   setState(() {
                     _selectedCategoryIndex = index;
@@ -66,13 +66,12 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   padding: EdgeInsets.all(5),
                   child: Container(
                     width: 150,
-                    padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: isSelected ? Colors.blue : Colors.grey,
                         width: 2,
                       ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: Center(
                       child: Text(
