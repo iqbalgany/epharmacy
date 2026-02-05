@@ -25,51 +25,57 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: page[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.blue,
-        currentIndex: _selectedIndex,
-        onTap: (value) {
-          setState(() {
-            _selectedIndex = value;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
-              size: 30,
-              color: Colors.blue,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.grey.shade300)),
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedItemColor: Colors.blue,
+          currentIndex: _selectedIndex,
+          onTap: (value) {
+            setState(() {
+              _selectedIndex = value;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
+                size: 30,
+                color: Colors.blue,
+              ),
+              label: "home",
             ),
-            label: "home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              _selectedIndex == 1 ? Icons.favorite : Icons.favorite_outline,
-              size: 30,
-              color: Colors.blue,
+            BottomNavigationBarItem(
+              icon: Icon(
+                _selectedIndex == 1 ? Icons.favorite : Icons.favorite_outline,
+                size: 30,
+                color: Colors.blue,
+              ),
+              label: "favorite",
             ),
-            label: "favorite",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              _selectedIndex == 2
-                  ? Icons.shopping_bag
-                  : Icons.shopping_bag_outlined,
-              size: 30,
-              color: Colors.blue,
+            BottomNavigationBarItem(
+              icon: Icon(
+                _selectedIndex == 2
+                    ? Icons.shopping_bag
+                    : Icons.shopping_bag_outlined,
+                size: 30,
+                color: Colors.blue,
+              ),
+              label: "cart",
             ),
-            label: "cart",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              _selectedIndex == 3 ? Icons.person : Icons.person_outline,
-              size: 30,
-              color: Colors.blue,
+            BottomNavigationBarItem(
+              icon: Icon(
+                _selectedIndex == 3 ? Icons.person : Icons.person_outline,
+                size: 30,
+                color: Colors.blue,
+              ),
+              label: "profile",
             ),
-            label: "profile",
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

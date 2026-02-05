@@ -128,6 +128,34 @@ class ProductCubit extends Cubit<ProductState> {
         );
   }
 
+  void searchProducts(String search) {
+    emit(state.copyWith(status: ProductStatus.loading));
+
+    _productsSubscription?.cancel();
+
+    _productsSubscription = _productRemoteDatasource
+        .searchProducts(search)
+        .listen(
+          (products) {
+            if (isClosed) return;
+
+            emit(
+              state.copyWith(status: ProductStatus.success, products: products),
+            );
+          },
+          onError: (error) {
+            if (isClosed) return;
+
+            emit(
+              state.copyWith(
+                status: ProductStatus.error,
+                errorMessage: error.toString(),
+              ),
+            );
+          },
+        );
+  }
+
   @override
   Future<void> close() {
     _productsSubscription?.cancel();

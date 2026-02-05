@@ -70,4 +70,29 @@ class ProductRemoteDatasource {
       }).toList();
     });
   }
+
+  Stream<List<ProductModel>> searchProducts(String search) {
+    return _firebaseFirestore
+        .collection(FirebaseConstans.products)
+        .orderBy('name')
+        .snapshots()
+        .map((snapshot) {
+          final allProducts = snapshot.docs.map((doc) {
+            final data = doc.data();
+            data['productId'] = doc.id;
+            return ProductModel.fromMap(data);
+          }).toList();
+
+          if (search.isEmpty) {
+            return allProducts;
+          } else {
+            return allProducts.where((product) {
+              final productName = product.name.toLowerCase();
+              final searchInput = search.toLowerCase();
+
+              return productName.contains(searchInput);
+            }).toList();
+          }
+        });
+  }
 }
