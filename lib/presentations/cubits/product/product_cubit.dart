@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/models/product_model.dart';
-import 'package:epharmacy/data/remote_datasource/product_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/product/product_remote_datasource.dart';
 import 'package:equatable/equatable.dart';
 
 part 'product_state.dart';
@@ -79,6 +79,34 @@ class ProductCubit extends Cubit<ProductState> {
 
     _productsSubscription = _productRemoteDatasource
         .getProductByCategory(categoryName)
+        .listen(
+          (products) {
+            if (isClosed) return;
+
+            emit(
+              state.copyWith(status: ProductStatus.success, products: products),
+            );
+          },
+          onError: (error) {
+            if (isClosed) return;
+
+            emit(
+              state.copyWith(
+                status: ProductStatus.error,
+                errorMessage: error.toString(),
+              ),
+            );
+          },
+        );
+  }
+
+  void getRelatedProducts(String categoryName) {
+    emit(state.copyWith(status: ProductStatus.loading));
+
+    _productsSubscription?.cancel();
+
+    _productsSubscription = _productRemoteDatasource
+        .getRelatedProducts(categoryName)
         .listen(
           (products) {
             if (isClosed) return;

@@ -52,9 +52,9 @@ class HomePage extends StatelessWidget {
                   Text(
                     'See All',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Colors.black,
                       fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],

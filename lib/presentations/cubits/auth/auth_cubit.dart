@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:epharmacy/data/remote_datasource/auth_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/auth/auth_remote_datasource.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

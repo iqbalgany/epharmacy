@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:epharmacy/constants/helpers.dart';
 import 'package:epharmacy/data/models/product_model.dart';
 import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
+import 'package:epharmacy/presentations/widgets/related_product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -151,6 +152,38 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Similiar Products',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    'See All',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RelatedProductWidget(
+                categoryName: widget.product!.categoryName!,
+              ),
+            ),
+            SizedBox(height: 30),
           ],
         ),
       ),

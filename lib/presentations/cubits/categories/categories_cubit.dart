@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/models/category_model.dart';
-import 'package:epharmacy/data/remote_datasource/categories_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/categories/categories_remote_datasource.dart';
 import 'package:equatable/equatable.dart';
 
 part 'categories_state.dart';

@@ -13,10 +13,28 @@ class ProductWidget extends StatelessWidget {
     return BlocBuilder<ProductCubit, ProductState>(
       builder: (context, state) {
         if (state.status == ProductStatus.loading) {
-          return Center(child: CircularProgressIndicator());
+          return SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.5,
+            child: Center(child: CircularProgressIndicator()),
+          );
         }
         if (state.status == ProductStatus.error) {
-          return Center(child: Text(state.errorMessage));
+          return SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.5,
+            child: Center(child: Text(state.errorMessage)),
+          );
+        }
+
+        if (state.products.isEmpty) {
+          return SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.5,
+            child: Center(
+              child: Text(
+                'Empty Product',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          );
         }
         return GridView.builder(
           shrinkWrap: true,

@@ -1,6 +1,6 @@
-import 'package:epharmacy/data/remote_datasource/auth_remote_datasource.dart';
-import 'package:epharmacy/data/remote_datasource/categories_remote_datasource.dart';
-import 'package:epharmacy/data/remote_datasource/product_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/auth/auth_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/categories/categories_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/product/product_remote_datasource.dart';
 import 'package:epharmacy/firebase_options.dart';
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/categories/categories_cubit.dart';
