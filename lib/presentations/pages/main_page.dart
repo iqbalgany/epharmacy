@@ -30,10 +30,11 @@ class _MainPageState extends State<MainPage> {
           border: Border(top: BorderSide(color: Colors.grey.shade300)),
         ),
         child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
+          type: BottomNavigationBarType.shifting,
           selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.black54,
           currentIndex: _selectedIndex,
+          iconSize: 30,
           onTap: (value) {
             setState(() {
               _selectedIndex = value;
@@ -43,17 +44,15 @@ class _MainPageState extends State<MainPage> {
             BottomNavigationBarItem(
               icon: Icon(
                 _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
-                size: 30,
-                color: Colors.blue,
               ),
+              backgroundColor: Colors.white,
               label: "home",
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 _selectedIndex == 1 ? Icons.favorite : Icons.favorite_outline,
-                size: 30,
-                color: Colors.blue,
               ),
+              backgroundColor: Colors.white,
               label: "favorite",
             ),
             BottomNavigationBarItem(
@@ -61,17 +60,15 @@ class _MainPageState extends State<MainPage> {
                 _selectedIndex == 2
                     ? Icons.shopping_bag
                     : Icons.shopping_bag_outlined,
-                size: 30,
-                color: Colors.blue,
               ),
+              backgroundColor: Colors.white,
               label: "cart",
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 _selectedIndex == 3 ? Icons.person : Icons.person_outline,
-                size: 30,
-                color: Colors.blue,
               ),
+              backgroundColor: Colors.white,
               label: "profile",
             ),
           ],

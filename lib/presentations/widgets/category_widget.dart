@@ -67,18 +67,17 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   child: Container(
                     width: 150,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isSelected ? Colors.blue : Colors.grey,
-                        width: 2,
-                      ),
+                      color: isSelected ? Colors.blue : Colors.white,
+                      border: Border.all(color: Colors.blue, width: 2),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Center(
                       child: Text(
                         category.name ?? '',
                         style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.blue,
                           fontSize: 15,
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
