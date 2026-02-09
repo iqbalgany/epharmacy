@@ -5,16 +5,23 @@ import 'package:epharmacy/presentations/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final int intialIndex;
+  const MainPage({super.key, this.intialIndex = 0});
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
-  List<dynamic> page = [
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.intialIndex;
+  }
+
+  List<Widget> page = [
     const HomePage(),
     const FavoritePage(),
     const CartPage(),

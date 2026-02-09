@@ -4,7 +4,7 @@ class CartModel {
   final String? cartId;
   final String? image;
   final String? productId;
-  final int? quantity;
+  int? quantity;
   final double? cost;
   final String? name;
   final double? price;
