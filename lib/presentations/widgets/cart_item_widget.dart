@@ -12,82 +12,92 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsetsGeometry.all(8),
-          child: CachedNetworkImage(
-            fit: BoxFit.cover,
-            imageUrl: getOptimizedUrl(
-              item.image ?? '',
-              MediaQuery.sizeOf(context).width.toInt(),
-            ),
-            placeholder: (context, url) =>
-                Center(child: CircularProgressIndicator()),
-          ),
-        ),
-        Expanded(
-          child: Wrap(
-            direction: Axis.vertical,
-            children: [
-              Container(
-                padding: EdgeInsets.only(left: 14),
-                child: Text(
-                  item.name ?? '',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsetsGeometry.all(8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: getOptimizedUrl(
+                  item.image ?? '',
+                  (MediaQuery.sizeOf(context).width * 0.25).toInt(),
+                ),
+                placeholder: (context, url) => Container(
+                  width: MediaQuery.sizeOf(context).width * 0.25,
+                  height: MediaQuery.sizeOf(context).width * 0.1,
+                  color: Colors.grey.shade300,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      context.read<CartCubit>().removeCartItem(item);
-                    },
-                    icon: Icon(Icons.remove),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.all(8),
-
-                    child: Text(item.quantity.toString()),
-                  ),
-
-                  IconButton(
-                    onPressed: () {
-                      context.read<CartCubit>().increaseQuantity(item);
-                    },
-                    icon: Icon(Icons.add),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        IconButton(
-          onPressed: () {
-            context.read<CartCubit>().removeCartItem(item);
-          },
-          icon: Icon(Icons.delete, color: Colors.red),
-        ),
-
-        Padding(
-          padding: EdgeInsets.all(14),
-          child: Text(
-            '\$${item.cost}',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue,
             ),
           ),
-        ),
+          Expanded(
+            child: Wrap(
+              direction: Axis.vertical,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 14),
+                  child: Text(
+                    item.name ?? '',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
 
-        Divider(thickness: 2, color: Colors.black),
-      ],
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        context.read<CartCubit>().removeCartItem(item);
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.all(8),
+
+                      child: Text(item.quantity.toString()),
+                    ),
+
+                    IconButton(
+                      onPressed: () {
+                        context.read<CartCubit>().increaseQuantity(item);
+                      },
+                      icon: Icon(Icons.add),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          IconButton(
+            onPressed: () {
+              context.read<CartCubit>().removeCartItem(item);
+            },
+            icon: Icon(Icons.delete, color: Colors.red),
+          ),
+
+          Padding(
+            padding: EdgeInsets.all(14),
+            child: Text(
+              '\$${item.cost}',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

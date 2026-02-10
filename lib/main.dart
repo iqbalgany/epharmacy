@@ -8,7 +8,7 @@ import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/categories/categories_cubit.dart';
 import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
-import 'package:epharmacy/presentations/pages/main_page.dart';
+import 'package:epharmacy/presentations/pages/auth/signin_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-        home: MainPage(),
+        home: SigninPage(),
       ),
     );
   }

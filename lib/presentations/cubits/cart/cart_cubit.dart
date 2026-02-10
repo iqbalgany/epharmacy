@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/models/cart_model.dart';
 import 'package:epharmacy/data/models/product_model.dart';
@@ -8,7 +11,33 @@ part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
   final CartRemoteDatasource _cartRemoteDatasource;
-  CartCubit(this._cartRemoteDatasource) : super(const CartState());
+
+  StreamSubscription? _cartSubscription;
+
+  CartCubit(this._cartRemoteDatasource) : super(const CartState()) {
+    getCartItems();
+  }
+
+  void getCartItems() {
+    // Jangan emit loading di sini agar UI tidak kedip-kedip saat update data
+    // emit(state.copyWith(status: CartStatus.loading));
+
+    // 2. BATALKAN STREAM LAMA SEBELUM MEMBUAT BARU
+    _cartSubscription?.cancel();
+
+    _cartSubscription = _cartRemoteDatasource.getCartItems().listen(
+      (carts) {
+        log("DEBUG: Cubit menerima ${carts.length} item");
+        emit(state.copyWith(status: CartStatus.success, carts: carts));
+      },
+      onError: (error) {
+        log("DEBUG: Cubit Error: $error");
+        emit(
+          state.copyWith(status: CartStatus.error, message: error.toString()),
+        );
+      },
+    );
+  }
 
   Future<void> addProductToCart(ProductModel product) async {
     emit(state.copyWith(status: CartStatus.loading));
@@ -95,5 +124,11 @@ class CartCubit extends Cubit<CartState> {
         state.copyWith(status: CartStatus.success, message: 'Cart cleared'),
       ),
     );
+  }
+
+  @override
+  Future<void> close() {
+    _cartSubscription?.cancel();
+    return super.close();
   }
 }

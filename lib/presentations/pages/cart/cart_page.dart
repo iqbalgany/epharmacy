@@ -59,44 +59,43 @@ class _CartPageState extends State<CartPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.carts!.isEmpty || state.carts == null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('No items in the cart'),
-                  SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MainPage(intialIndex: 0),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Back To Shopping',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+          if (state.carts!.isNotEmpty) {
+            return ListView.separated(
+              itemCount: state.carts!.length,
+              separatorBuilder: (context, index) => SizedBox(height: 10),
+              padding: EdgeInsets.all(10),
+              itemBuilder: (context, index) {
+                return CartItemWidget(item: state.carts![index]);
+              },
             );
           }
 
-          return ListView(
-            children: [
-              Column(
-                children: state.carts!
-                    .map((cartItem) => CartItemWidget(item: cartItem))
-                    .toList(),
-              ),
-            ],
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('No items in the cart'),
+                SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MainPage(intialIndex: 0),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Back To Shopping',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),

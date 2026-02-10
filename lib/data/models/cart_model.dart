@@ -52,13 +52,13 @@ class CartModel {
 
   factory CartModel.fromMap(Map<String, dynamic> map) {
     return CartModel(
-      cartId: map['cartId'] != null ? map['cartId'] as String : null,
-      image: map['image'] != null ? map['image'] as String : null,
-      productId: map['productId'] != null ? map['productId'] as String : null,
-      quantity: map['quantity'] != null ? map['quantity'] as int : null,
-      cost: map['cost'] != null ? map['cost'] as double : null,
-      name: map['name'] != null ? map['name'] as String : null,
-      price: map['price'] != null ? map['price'] as double : null,
+      cartId: map['cartId'] as String?,
+      image: map['image'] as String?,
+      productId: map['productId'] as String?,
+      name: map['name'] as String?,
+      quantity: (map['quantity'] as num?)?.toInt(),
+      cost: (map['cost'] as num?)?.toDouble(),
+      price: (map['price'] as num?)?.toDouble(),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:epharmacy/constants/helpers.dart';
+import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
 import 'package:epharmacy/presentations/pages/product/product_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -74,20 +75,51 @@ class ProductWidget extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadiusGeometry.circular(20),
-                        child: SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.2,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl: getOptimizedUrl(
-                              product.image,
-                              MediaQuery.sizeOf(context).width.toInt(),
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadiusGeometry.circular(20),
+                            child: SizedBox(
+                              height: MediaQuery.sizeOf(context).height * 0.2,
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: getOptimizedUrl(
+                                  product.image,
+                                  MediaQuery.sizeOf(context).width.toInt(),
+                                ),
+                                placeholder: (context, url) =>
+                                    Center(child: CircularProgressIndicator()),
+                              ),
                             ),
-                            placeholder: (context, url) =>
-                                Center(child: CircularProgressIndicator()),
                           ),
-                        ),
+                          Positioned(
+                            top: 2,
+                            right: 2,
+                            child: IconButton(
+                              style: IconButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: CircleBorder(),
+                              ),
+                              onPressed: () {
+                                if (product.isAvailable == true) {
+                                  context.read<CartCubit>().addProductToCart(
+                                    product,
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Product is out of stock'),
+                                    ),
+                                  );
+                                }
+                              },
+                              icon: Icon(
+                                Icons.shopping_bag,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Center(
                         child: Text(

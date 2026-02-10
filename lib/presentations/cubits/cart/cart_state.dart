@@ -25,6 +25,7 @@ class CartState extends Equatable {
     return CartState(
       status: status ?? this.status,
       message: message ?? this.message,
+      carts: carts ?? this.carts,
     );
   }
 }
