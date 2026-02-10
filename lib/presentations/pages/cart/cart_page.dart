@@ -1,6 +1,7 @@
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/pages/main_page.dart';
 import 'package:epharmacy/presentations/widgets/cart_item_widget.dart';
+import 'package:epharmacy/presentations/widgets/check_out_bottom_nav.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,7 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
           GestureDetector(
@@ -38,7 +40,7 @@ class _CartPageState extends State<CartPage> {
           ),
         ],
         title: Text(
-          'Clear carts',
+          'Carts',
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -56,7 +58,10 @@ class _CartPageState extends State<CartPage> {
           }
 
           if (state.status == CartStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.7,
+              child: const Center(child: CircularProgressIndicator()),
+            );
           }
 
           if (state.carts!.isNotEmpty) {
@@ -99,6 +104,8 @@ class _CartPageState extends State<CartPage> {
           );
         },
       ),
+
+      bottomNavigationBar: CheckOutBottomNav(),
     );
   }
 }

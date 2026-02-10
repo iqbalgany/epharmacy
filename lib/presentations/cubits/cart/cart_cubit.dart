@@ -16,13 +16,38 @@ class CartCubit extends Cubit<CartState> {
 
   CartCubit(this._cartRemoteDatasource) : super(const CartState()) {
     getCartItems();
+    onLoadCart();
+  }
+
+  Future<void> onLoadCart() async {
+    emit(state.copyWith(status: CartStatus.loading));
+    _cartSubscription?.cancel();
+
+    _cartSubscription = _cartRemoteDatasource.getCartItems().listen(
+      (cartList) {
+        double total = cartList.fold(
+          0.0,
+          (sum, item) => sum + ((item.cost ?? 0) * (item.quantity ?? 0)),
+        );
+
+        emit(
+          state.copyWith(
+            carts: cartList,
+            grandTotal: total,
+            status: CartStatus.success,
+          ),
+        );
+      },
+      onError: (error) {
+        log("DEBUG: Cubit Error: $error");
+        emit(
+          state.copyWith(status: CartStatus.error, message: error.toString()),
+        );
+      },
+    );
   }
 
   void getCartItems() {
-    // Jangan emit loading di sini agar UI tidak kedip-kedip saat update data
-    // emit(state.copyWith(status: CartStatus.loading));
-
-    // 2. BATALKAN STREAM LAMA SEBELUM MEMBUAT BARU
     _cartSubscription?.cancel();
 
     _cartSubscription = _cartRemoteDatasource.getCartItems().listen(
@@ -66,12 +91,18 @@ class CartCubit extends Cubit<CartState> {
       (failure) => emit(
         state.copyWith(status: CartStatus.error, message: failure.message),
       ),
-      (success) => emit(
-        state.copyWith(
-          status: CartStatus.success,
-          message: '${item.name} removed from cart',
-        ),
-      ),
+      (success) {
+        final updatedList = List<CartModel>.from(state.carts!)
+          ..removeWhere((element) => element.cartId == item.cartId);
+
+        emit(
+          state.copyWith(
+            status: CartStatus.success,
+            message: '${item.name} removed from cart',
+            carts: updatedList,
+          ),
+        );
+      },
     );
   }
 

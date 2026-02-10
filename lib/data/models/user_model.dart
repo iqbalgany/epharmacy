@@ -100,3 +100,11 @@ class UserModel {
         cart.hashCode;
   }
 }
+
+extension CartExt on UserModel {
+  double get grandTotal {
+    return cart!
+        .map((e) => e.cost! * e.quantity!)
+        .fold(0, (previousValue, element) => previousValue + element);
+  }
+}

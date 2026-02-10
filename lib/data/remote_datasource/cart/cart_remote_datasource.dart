@@ -15,6 +15,7 @@ class CartRemoteDatasource {
   CartRemoteDatasource(this._firebaseFirestore, this._firebaseAuth);
 
   String? _getuid() => _firebaseAuth.currentUser?.uid;
+
   Stream<List<CartModel>> getCartItems() {
     final uid = _getuid();
     if (uid == null) {
@@ -34,7 +35,6 @@ class CartRemoteDatasource {
 
           final data = snapshot.data() as Map<String, dynamic>;
 
-          // Debugging log
           log("DEBUG: Raw Data Firestore: $data");
 
           final List<dynamic> cartList = data['cart'] ?? [];
@@ -43,20 +43,15 @@ class CartRemoteDatasource {
             return cartList
                 .map((item) {
                   try {
-                    // --- PERBAIKAN DI SINI ---
-                    // Gunakan .fromMap karena item sudah berupa Map, bukan String JSON
                     return CartModel.fromMap(item as Map<String, dynamic>);
-                    // -------------------------
                   } catch (e) {
                     log("DEBUG: Error parsing item $item. Error: $e");
-                    // Kita return null dulu agar tidak throw exception fatal
-                    // Nanti kita filter di bawah
+
                     return null;
                   }
                 })
-                // Filter item yang null (gagal parsing) agar list tetap valid
                 .where((element) => element != null)
-                .cast<CartModel>() // Ubah tipe kembali ke List<CartModel>
+                .cast<CartModel>()
                 .toList();
           } catch (e) {
             log("DEBUG: Fatal Error saat mapping list: $e");
@@ -76,11 +71,9 @@ class CartRemoteDatasource {
           .collection(FirebaseConstans.carts)
           .doc(user.uid);
 
-      // Gunakan Transaction agar aman saat update data bersamaan
       await _firebaseFirestore.runTransaction((transaction) async {
         final snapshot = await transaction.get(docRef);
 
-        // Jika dokumen belum ada, buat baru
         if (!snapshot.exists) {
           String cartId = const Uuid().v1();
           transaction.set(docRef, {
@@ -93,7 +86,7 @@ class CartRemoteDatasource {
                 cost: product.price.toDouble(),
                 name: product.name,
                 price: product.price,
-              ).toMap(), // Gunakan toMap()
+              ).toMap(),
             ],
           });
           return;
@@ -102,18 +95,14 @@ class CartRemoteDatasource {
         final data = snapshot.data() as Map<String, dynamic>;
         final List<dynamic> rawList = List.from(data['cart'] ?? []);
 
-        // Cek apakah produk ini SUDAH ADA di cart berdasarkan productId
         final index = rawList.indexWhere(
           (item) => item['productId'] == product.productId.toString(),
         );
 
         if (index != -1) {
-          // --- SKENARIO 1: PRODUK SUDAH ADA -> UPDATE QUANTITY ---
           final currentQty = rawList[index]['quantity'] as int;
           rawList[index]['quantity'] = currentQty + 1;
-          // Opsional: Update cost total jika perlu (price * quantity baru)
         } else {
-          // --- SKENARIO 2: PRODUK BARU -> TAMBAH KE LIST ---
           String cartId = const Uuid().v1();
           rawList.add(
             CartModel(
@@ -137,43 +126,6 @@ class CartRemoteDatasource {
     }
   }
 
-  // Future<Either<Failure, Unit>> addProductToCart(ProductModel product) async {
-  //   try {
-  //     final user = _firebaseAuth.currentUser;
-
-  //     if (user == null) {
-  //       return Left(Failure(message: 'User is not authenticated'));
-  //     }
-
-  //     String cartId = const Uuid().v1();
-
-  //     await _firebaseFirestore
-  //         .collection(FirebaseConstans.carts)
-  //         .doc(user.uid)
-  //         .set({
-  //           'cart': FieldValue.arrayUnion([
-  //             CartModel(
-  //               cartId: cartId,
-  //               image: product.image.toString(),
-  //               productId: product.productId.toString(),
-  //               quantity: 1,
-  //               cost: product.price.toDouble(),
-  //               name: product.name,
-  //               price: product.price,
-  //             ).toJson(),
-  //           ]),
-  //         }, SetOptions(merge: true));
-
-  //     return Right(unit);
-  //   } on FirebaseException catch (e) {
-  //     return Left(
-  //       Failure(message: e.message ?? 'An error on firebase occurred'),
-  //     );
-  //   } catch (e) {
-  //     return Left(Failure(message: e.toString()));
-  //   }
-  // }
-
   Future<Either<dynamic, Unit>> removeCartItem(CartModel cartItem) async {
     try {
       final uid = _getuid();
@@ -181,12 +133,22 @@ class CartRemoteDatasource {
         return Left(Failure(message: 'User is not authenticated'));
       }
 
-      await _firebaseFirestore
+      final docRef = _firebaseFirestore
           .collection(FirebaseConstans.carts)
-          .doc(uid)
-          .update({
-            'cart': FieldValue.arrayRemove([cartItem.toJson()]),
-          });
+          .doc(uid);
+
+      final snapshot = await docRef.get();
+
+      if (snapshot.exists && snapshot.data() != null) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        final List<dynamic> cartList = data['cart'] ?? [];
+
+        final updatedCart = cartList.where((item) {
+          return item['cartId'] != cartItem.cartId;
+        }).toList();
+
+        await docRef.update({'cart': updatedCart});
+      }
 
       return Right(unit);
     } catch (e) {
