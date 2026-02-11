@@ -10,25 +10,7 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final AuthRemoteDatasource _authRemoteDatasource;
   late StreamSubscription<User?> _userSubscription;
-  AuthCubit(this._authRemoteDatasource) : super(const AuthState()) {
-    // _monitorAuthState();
-  }
-
-  // void _monitorAuthState() {
-  //   _userSubscription = _authRemoteDatasource.authStatechange.listen((user) {
-  //     if (user != null) {
-  //       emit(
-  //         state.copyWith(
-  //           status: AuthStatus.success,
-  //           user: user,
-  //           errorMessage: null,
-  //         ),
-  //       );
-  //     } else {
-  //       emit(state.copyWith(status: AuthStatus.unauthenticated, user: null));
-  //     }
-  //   });
-  // }
+  AuthCubit(this._authRemoteDatasource) : super(const AuthState());
 
   Future<void> signIn({required String email, required String password}) async {
     emit(state.copyWith(status: AuthStatus.loading));
@@ -50,11 +32,23 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signUp({required String email, required String password}) async {
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+    String? profileImage,
+  }) async {
     emit(state.copyWith(status: AuthStatus.loading));
 
     try {
-      await _authRemoteDatasource.signupWithEmailAndPassword(email, password);
+      await _authRemoteDatasource.signupWithEmailAndPassword(
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        profileImage: profileImage,
+      );
       emit(state.copyWith(status: AuthStatus.success));
     } on FirebaseAuthException catch (e) {
       emit(

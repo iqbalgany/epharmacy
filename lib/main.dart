@@ -8,7 +8,9 @@ import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/categories/categories_cubit.dart';
 import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
+import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
 import 'package:epharmacy/presentations/pages/auth/signin_page.dart';
+import 'package:epharmacy/presentations/pages/main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +44,25 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        BlocProvider(create: (context) => ProfileCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-        home: SigninPage(),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Scaffold(
+                body: const Center(child: CircularProgressIndicator()),
+              );
+            } else if (snapshot.hasData) {
+              return const MainPage(intialIndex: 0);
+            } else {
+              return const SigninPage();
+            }
+          },
+        ),
       ),
     );
   }

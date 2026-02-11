@@ -1,7 +1,7 @@
 import 'package:epharmacy/presentations/pages/cart/cart_page.dart';
 import 'package:epharmacy/presentations/pages/favorite/favorite_page.dart';
 import 'package:epharmacy/presentations/pages/product/home_page.dart';
-import 'package:epharmacy/presentations/pages/profile/profile_page.dart';
+import 'package:epharmacy/presentations/pages/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -25,7 +25,7 @@ class _MainPageState extends State<MainPage> {
     const HomePage(),
     const FavoritePage(),
     const CartPage(),
-    const ProfilePage(),
+    const SettingsPage(),
   ];
 
   @override

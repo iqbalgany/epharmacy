@@ -14,6 +14,18 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmationController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _passwordConfirmationController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text('Register Page'),
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -30,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: 32),
+                SizedBox(height: 20),
                 Center(
                   child: Icon(
                     Icons.medical_services_rounded,
@@ -38,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     size: 80,
                   ),
                 ),
-                SizedBox(height: 32),
+                SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
                   enableSuggestions: true,
@@ -63,7 +76,57 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 32),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _firstNameController,
+                  enableSuggestions: true,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    hintText: 'input your first name',
+                    hintStyle: TextStyle(color: Colors.black),
+                    prefixIcon: Icon(
+                      Icons.person_outline,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    alignLabelWithHint: true,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'First name is empty';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _lastNameController,
+                  enableSuggestions: true,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    hintText: 'input your last name',
+                    hintStyle: TextStyle(color: Colors.black),
+                    prefixIcon: Icon(
+                      Icons.person_outline,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    alignLabelWithHint: true,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Last name is empty';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
                 TextFormField(
                   controller: _passwordController,
                   enableSuggestions: true,
@@ -90,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 32),
+                SizedBox(height: 20),
                 TextFormField(
                   controller: _passwordConfirmationController,
                   enableSuggestions: true,
@@ -115,7 +178,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
+                SizedBox(height: 20),
                 Divider(thickness: 2),
+                SizedBox(height: 20),
                 Center(
                   child: GestureDetector(
                     onTap: () => Navigator.pop(context),
@@ -130,6 +195,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 20),
                 BlocListener<AuthCubit, AuthState>(
                   listenWhen: (previous, current) =>
                       previous.status != current.status,
@@ -143,6 +209,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       );
                     }
+
+                    if (state.status == AuthStatus.success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Registration Successful')),
+                      );
+                      Navigator.pop(context);
+                    }
                   },
                   child: SizedBox(
                     width: MediaQuery.sizeOf(context).width,
@@ -153,10 +226,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           context.read<AuthCubit>().signUp(
                             email: _emailController.text.trim(),
                             password: _passwordController.text.trim(),
+                            firstName: _firstNameController.text.trim(),
+                            lastName: _lastNameController.text.trim(),
+                            profileImage: null,
                           );
-                          Navigator.pop(context);
-                        } else {
-                          null;
                         }
                       },
                       style: ElevatedButton.styleFrom(

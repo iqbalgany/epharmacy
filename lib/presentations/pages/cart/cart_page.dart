@@ -81,8 +81,14 @@ class _CartPageState extends State<CartPage> {
               children: [
                 Text('No items in the cart'),
                 SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll<Color>(Colors.blue),
+                    foregroundColor: WidgetStatePropertyAll<Color>(
+                      Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -93,7 +99,7 @@ class _CartPageState extends State<CartPage> {
                   child: Text(
                     'Back To Shopping',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
