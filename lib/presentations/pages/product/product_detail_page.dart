@@ -34,7 +34,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               children: [
                 CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: getOptimizedUrl(
+                  imageUrl: Helpers.getOptimizedUrl(
                     widget.product?.image ?? '',
                     MediaQuery.sizeOf(context).width.toInt(),
                   ),

@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
 import 'package:epharmacy/presentations/pages/auth/signin_page.dart';
@@ -15,18 +17,37 @@ class SettingsPage extends StatelessWidget {
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           final user = state.user;
+          String? base64String = user?.profileImage;
           return SingleChildScrollView(
             child: Column(
               children: [
                 SizedBox(height: 60),
                 Center(
-                  child: Image.asset(
-                    user?.profileImage == null
-                        ? 'assets/images/profile.jpg'
-                        : user!.profileImage!,
-                    height: 90,
-                    width: 90,
-                  ),
+                  child: (base64String != null && base64String.isNotEmpty)
+                      ? Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.black),
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: MemoryImage(base64Decode(base64String)),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.black),
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage('assets/profile.jpg'),
+                            ),
+                          ),
+                        ),
                 ),
                 SizedBox(height: 8),
                 Text(
@@ -35,7 +56,7 @@ class SettingsPage extends StatelessWidget {
                       : '${user!.firstName} ${user.lastName}',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 15,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

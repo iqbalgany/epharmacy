@@ -83,7 +83,7 @@ class ProductWidget extends StatelessWidget {
                               height: MediaQuery.sizeOf(context).height * 0.2,
                               child: CachedNetworkImage(
                                 fit: BoxFit.cover,
-                                imageUrl: getOptimizedUrl(
+                                imageUrl: Helpers.getOptimizedUrl(
                                   product.image,
                                   MediaQuery.sizeOf(context).width.toInt(),
                                 ),

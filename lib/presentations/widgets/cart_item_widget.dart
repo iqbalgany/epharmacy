@@ -24,7 +24,7 @@ class CartItemWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: CachedNetworkImage(
               fit: BoxFit.cover,
-              imageUrl: getOptimizedUrl(
+              imageUrl: Helpers.getOptimizedUrl(
                 item.image ?? '',
                 (MediaQuery.sizeOf(context).width * 0.25).toInt(),
               ),
