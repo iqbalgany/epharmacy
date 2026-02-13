@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/models/address_model.dart';
@@ -45,11 +44,9 @@ class AddressCubit extends Cubit<AddressState> {
 
     _cartSubscription = _addressRemoteDatasource.getAddress().listen(
       (address) {
-        log("DEBUG: Cubit menerima ${address.length} address");
         emit(state.copyWith(status: AddressStatus.success, address: address));
       },
       onError: (error) {
-        log("DEBUG: Cubit Error: $error");
         emit(
           state.copyWith(
             status: AddressStatus.error,

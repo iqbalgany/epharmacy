@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -26,7 +25,6 @@ class Helpers {
           );
 
       if (compressedBytes == null) {
-        log(' Compression failed: compressedBytes is null');
         return null;
       }
 
@@ -34,7 +32,6 @@ class Helpers {
 
       return base64String;
     } catch (e) {
-      log('Error compressing image: $e');
       return null;
     }
   }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/models/cart_model.dart';
@@ -39,7 +38,6 @@ class CartCubit extends Cubit<CartState> {
         );
       },
       onError: (error) {
-        log("DEBUG: Cubit Error: $error");
         emit(
           state.copyWith(status: CartStatus.error, message: error.toString()),
         );
@@ -52,11 +50,9 @@ class CartCubit extends Cubit<CartState> {
 
     _cartSubscription = _cartRemoteDatasource.getCartItems().listen(
       (carts) {
-        log("DEBUG: Cubit menerima ${carts.length} item");
         emit(state.copyWith(status: CartStatus.success, carts: carts));
       },
       onError: (error) {
-        log("DEBUG: Cubit Error: $error");
         emit(
           state.copyWith(status: CartStatus.error, message: error.toString()),
         );

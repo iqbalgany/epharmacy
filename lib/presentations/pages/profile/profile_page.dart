@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
@@ -32,17 +31,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> selectProfileImage() async {
-    try {
-      final pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-      );
-      if (pickedFile != null) {
-        setState(() {
-          image = File(pickedFile.path);
-        });
-      }
-    } catch (e) {
-      log('Error picking image: $e');
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        image = File(pickedFile.path);
+      });
     }
   }
 
@@ -55,7 +50,6 @@ class _ProfilePageState extends State<ProfilePage> {
       try {
         return MemoryImage(base64Decode(firestoreBase64));
       } catch (e) {
-        log('Error decoding base64 image: $e');
         return AssetImage('assets/profile.jpg');
       }
     }

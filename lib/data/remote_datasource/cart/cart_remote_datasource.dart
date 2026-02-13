@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:epharmacy/constants/firebase_constans.dart';
 import 'package:epharmacy/core/failure.dart';
@@ -19,7 +17,6 @@ class CartRemoteDatasource {
   Stream<List<CartModel>> getCartItems() {
     final uid = _getuid();
     if (uid == null) {
-      log("DEBUG: UID is null");
       return Stream.error('User is not authenticated');
     }
 
@@ -29,13 +26,10 @@ class CartRemoteDatasource {
         .snapshots()
         .map((snapshot) {
           if (!snapshot.exists || snapshot.data() == null) {
-            log("DEBUG: Dokumen cart untuk UID $uid tidak ditemukan");
             return [];
           }
 
           final data = snapshot.data() as Map<String, dynamic>;
-
-          log("DEBUG: Raw Data Firestore: $data");
 
           final List<dynamic> cartList = data['cart'] ?? [];
 
@@ -45,8 +39,6 @@ class CartRemoteDatasource {
                   try {
                     return CartModel.fromMap(item as Map<String, dynamic>);
                   } catch (e) {
-                    log("DEBUG: Error parsing item $item. Error: $e");
-
                     return null;
                   }
                 })
@@ -54,7 +46,6 @@ class CartRemoteDatasource {
                 .cast<CartModel>()
                 .toList();
           } catch (e) {
-            log("DEBUG: Fatal Error saat mapping list: $e");
             return <CartModel>[];
           }
         });

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
+import 'package:epharmacy/presentations/pages/address/address_page.dart';
 import 'package:epharmacy/presentations/pages/auth/signin_page.dart';
 import 'package:epharmacy/presentations/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -73,11 +74,14 @@ class SettingsPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   trailing: Icon(Icons.arrow_forward_ios_rounded, size: 20),
                 ),
                 Divider(thickness: 2),
                 ListTile(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddressPage()),
+                  ),
                   leading: Text(
                     'Address',
                     style: TextStyle(

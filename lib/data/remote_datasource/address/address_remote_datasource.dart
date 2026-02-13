@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:epharmacy/constants/firebase_constans.dart';
 import 'package:epharmacy/core/failure.dart';
@@ -18,15 +16,15 @@ class AddressRemoteDatasource {
   Future<Either<Failure, Unit>> addAddress(AddressModel address) async {
     try {
       final uid = _getuid();
+
       if (uid == null) {
-        log("DEBUG: UID is null");
         return Left(Failure(message: 'User is not authenticated'));
       }
 
       await _firebaseFirestore
           .collection(FirebaseConstans.address)
           .doc(uid)
-          .set(address.toJson());
+          .set(address.toMap());
 
       return Right(unit);
     } catch (e) {
@@ -34,10 +32,9 @@ class AddressRemoteDatasource {
     }
   }
 
-  Stream<AddressModel> getAddress() {
+  Stream<AddressModel?> getAddress() {
     final uid = _getuid();
     if (uid == null) {
-      log("DEBUG: UID is null");
       return Stream.error('User is not authenticated');
     }
     return _firebaseFirestore
@@ -45,7 +42,11 @@ class AddressRemoteDatasource {
         .doc(uid)
         .snapshots()
         .map((event) {
-          return AddressModel.fromMap(event.data() as Map<String, dynamic>);
+          if (event.exists && event.data() != null) {
+            return AddressModel.fromMap(event.data() as Map<String, dynamic>);
+          } else {
+            throw Exception('Alamat belum diatur');
+          }
         });
   }
 
@@ -53,14 +54,13 @@ class AddressRemoteDatasource {
     try {
       final uid = _getuid();
       if (uid == null) {
-        log("DEBUG: UID is null");
         return Left(Failure(message: 'User is not authenticated'));
       }
 
       await _firebaseFirestore
           .collection(FirebaseConstans.address)
           .doc(uid)
-          .update(address.toJson());
+          .update(address.toMap());
 
       return Right(unit);
     } catch (e) {

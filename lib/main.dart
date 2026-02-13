@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:epharmacy/data/remote_datasource/address/address_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/auth/auth_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/cart/cart_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/categories/categories_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/product/product_remote_datasource.dart';
 import 'package:epharmacy/firebase_options.dart';
+import 'package:epharmacy/presentations/cubits/address/address_cubit.dart';
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/categories/categories_cubit.dart';
@@ -45,10 +47,21 @@ class MyApp extends StatelessWidget {
           ),
         ),
         BlocProvider(create: (context) => ProfileCubit()),
+        BlocProvider(
+          create: (context) => AddressCubit(
+            AddressRemoteDatasource(
+              FirebaseAuth.instance,
+              FirebaseFirestore.instance,
+            ),
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(backgroundColor: Colors.white),
+        ),
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
