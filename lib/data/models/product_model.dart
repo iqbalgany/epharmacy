@@ -1,13 +1,26 @@
 import 'dart:convert';
 
+import 'package:hive/hive.dart';
+
+part 'product_model.g.dart';
+
+@HiveType(typeId: 0)
 class ProductModel {
+  @HiveField(0)
   String productId;
+  @HiveField(1)
   String name;
+  @HiveField(2)
   String image;
+  @HiveField(3)
   double price;
+  @HiveField(4)
   double oldPrice;
+  @HiveField(5)
   bool? isAvailable;
+  @HiveField(6)
   String description;
+  @HiveField(7)
   String? categoryName;
   ProductModel({
     required this.productId,
