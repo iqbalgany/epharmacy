@@ -45,8 +45,6 @@ class WishlistCubit extends Cubit<WishlistState> {
       await box.add(product);
 
       emit(state.copyWith(status: WishlistStatus.success));
-
-      loadWishlist();
     } catch (e) {
       emit(
         state.copyWith(
@@ -64,13 +62,29 @@ class WishlistCubit extends Cubit<WishlistState> {
       await box.deleteAt(index);
 
       emit(state.copyWith(status: WishlistStatus.success));
-
-      loadWishlist();
     } catch (e) {
       emit(
         state.copyWith(
           status: WishlistStatus.failure,
           errorMessage: 'Gagal menghapus produk $e',
+        ),
+      );
+    }
+  }
+
+  Future<void> clearWishlist() async {
+    emit(state.copyWith(status: WishlistStatus.loading));
+    try {
+      final box = WishlistLocalStorage.getBox();
+
+      await box.clear();
+
+      emit(state.copyWith(status: WishlistStatus.success, wishlist: []));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: WishlistStatus.failure,
+          errorMessage: 'Gagal menghilangkan wishlist',
         ),
       );
     }
