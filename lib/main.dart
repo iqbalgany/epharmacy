@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:epharmacy/data/local%20storage/product_local_storage.dart';
+import 'package:epharmacy/data/models/product_model.dart';
 import 'package:epharmacy/data/remote_datasource/address/address_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/auth/auth_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/cart/cart_remote_datasource.dart';
@@ -11,6 +13,7 @@ import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/categories/categories_cubit.dart';
 import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
 import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
+import 'package:epharmacy/presentations/cubits/wishlist/wishlist_cubit.dart';
 import 'package:epharmacy/presentations/pages/auth/signin_page.dart';
 import 'package:epharmacy/presentations/pages/main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,8 +24,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   await Hive.initFlutter();
+
+  Hive.registerAdapter(ProductModelAdapter());
+
+  await WishlistLocalStorage.openBox();
   runApp(const MyApp());
 }
 
@@ -57,6 +66,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        BlocProvider(create: (context) => WishlistCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -7,21 +7,29 @@ part 'product_model.g.dart';
 @HiveType(typeId: 0)
 class ProductModel {
   @HiveField(0)
-  String productId;
+  final String productId;
+
   @HiveField(1)
-  String name;
+  final String name;
+
   @HiveField(2)
-  String image;
+  final String image;
+
   @HiveField(3)
-  double price;
+  final double price;
+
   @HiveField(4)
-  double oldPrice;
+  final double oldPrice;
+
   @HiveField(5)
-  bool? isAvailable;
+  final bool? isAvailable;
+
   @HiveField(6)
-  String description;
+  final String description;
+
   @HiveField(7)
-  String? categoryName;
+  final String? categoryName;
+
   ProductModel({
     required this.productId,
     required this.name,
