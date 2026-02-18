@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:epharmacy/data/local%20storage/product_local_storage.dart';
+import 'package:epharmacy/data/local_storage/product_local_storage.dart';
 import 'package:epharmacy/data/models/product_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -28,32 +28,75 @@ class WishlistCubit extends Cubit<WishlistState> {
     }
   }
 
-  Future<void> addProduct(ProductModel product) async {
+  Future<void> toggleWishlist(ProductModel product) async {
     try {
       final box = WishlistLocalStorage.getBox();
 
-      if (box.values.any((element) => element.productId == product.productId)) {
-        emit(
-          state.copyWith(
-            status: WishlistStatus.failure,
-            errorMessage: 'Produk sudah ada di wishlist',
-          ),
-        );
-        return;
+      final map = box.toMap();
+
+      dynamic targetKey;
+
+      map.forEach((key, value) {
+        if (value.productId == product.productId) {
+          targetKey = key;
+        }
+      });
+
+      if (targetKey != null) {
+        await box.delete(targetKey);
+      } else {
+        await box.add(product);
       }
 
-      await box.add(product);
-
-      emit(state.copyWith(status: WishlistStatus.success));
+      emit(
+        state.copyWith(
+          status: WishlistStatus.success,
+          wishlist: box.values.toList(),
+        ),
+      );
     } catch (e) {
       emit(
         state.copyWith(
           status: WishlistStatus.failure,
-          errorMessage: 'Gagal menambahkan produk $e',
+          errorMessage: e.toString(),
         ),
       );
     }
   }
+
+  // Future<void> addProduct(ProductModel product) async {
+  //   try {
+  //     final box = WishlistLocalStorage.getBox();
+
+  //     if (box.values.any((element) => element.productId == product.productId)) {
+  //       emit(
+  //         state.copyWith(
+  //           status: WishlistStatus.failure,
+  //           errorMessage: 'Produk sudah ada di wishlist',
+  //         ),
+  //       );
+  //       return;
+  //     }
+
+  //     await box.add(product);
+
+  //     final updateWishlist = box.values.toList();
+
+  //     emit(
+  //       state.copyWith(
+  //         status: WishlistStatus.success,
+  //         wishlist: updateWishlist,
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     emit(
+  //       state.copyWith(
+  //         status: WishlistStatus.failure,
+  //         errorMessage: 'Gagal menambahkan produk $e',
+  //       ),
+  //     );
+  //   }
+  // }
 
   Future<void> deleteProduct(int index) async {
     try {
@@ -61,7 +104,14 @@ class WishlistCubit extends Cubit<WishlistState> {
 
       await box.deleteAt(index);
 
-      emit(state.copyWith(status: WishlistStatus.success));
+      final updateWishlist = box.values.toList();
+
+      emit(
+        state.copyWith(
+          status: WishlistStatus.success,
+          wishlist: updateWishlist,
+        ),
+      );
     } catch (e) {
       emit(
         state.copyWith(

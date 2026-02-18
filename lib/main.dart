@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:epharmacy/data/local%20storage/product_local_storage.dart';
+import 'package:epharmacy/data/local_storage/product_local_storage.dart';
 import 'package:epharmacy/data/models/product_model.dart';
 import 'package:epharmacy/data/remote_datasource/address/address_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/auth/auth_remote_datasource.dart';
@@ -72,7 +72,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(backgroundColor: Colors.white),
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
+          ),
         ),
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
