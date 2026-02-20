@@ -5,12 +5,14 @@ import 'package:epharmacy/data/remote_datasource/address/address_remote_datasour
 import 'package:epharmacy/data/remote_datasource/auth/auth_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/cart/cart_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/categories/categories_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/order/order_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/product/product_remote_datasource.dart';
 import 'package:epharmacy/firebase_options.dart';
 import 'package:epharmacy/presentations/cubits/address/address_cubit.dart';
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/categories/categories_cubit.dart';
+import 'package:epharmacy/presentations/cubits/order/order_cubit.dart';
 import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
 import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
 import 'package:epharmacy/presentations/cubits/wishlist/wishlist_cubit.dart';
@@ -67,6 +69,10 @@ class MyApp extends StatelessWidget {
           ),
         ),
         BlocProvider(create: (context) => WishlistCubit()),
+        BlocProvider(
+          create: (context) =>
+              OrderCubit(OrderRemoteDatasource(FirebaseFirestore.instance)),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -12,6 +12,7 @@ class OrderModel {
   final String orderId;
   final AddressModel address;
   final bool? isAccepted;
+  final bool? isCancelled;
   final bool? isDelivered;
   final DateTime date;
   OrderModel({
@@ -21,6 +22,7 @@ class OrderModel {
     required this.orderId,
     required this.address,
     this.isAccepted,
+    this.isCancelled,
     this.isDelivered,
     required this.date,
   });
@@ -32,6 +34,7 @@ class OrderModel {
     String? orderId,
     AddressModel? address,
     bool? isAccepted,
+    bool? isCancelled,
     bool? isDelivered,
     DateTime? date,
   }) {
@@ -42,6 +45,7 @@ class OrderModel {
       orderId: orderId ?? this.orderId,
       address: address ?? this.address,
       isAccepted: isAccepted ?? this.isAccepted,
+      isCancelled: isCancelled ?? this.isCancelled,
       isDelivered: isDelivered ?? this.isDelivered,
       date: date ?? this.date,
     );
@@ -55,6 +59,7 @@ class OrderModel {
       'orderId': orderId,
       'address': address.toMap(),
       'isAccepted': isAccepted,
+      'isCancelled': isCancelled,
       'isDelivered': isDelivered,
       'date': date.millisecondsSinceEpoch,
     };
@@ -64,14 +69,17 @@ class OrderModel {
     return OrderModel(
       uid: map['uid'] != null ? map['uid'] as String : null,
       products: List<CartModel>.from(
-        (map['products'] as List<int>).map<CartModel>(
+        (map['products'] as List<dynamic>).map<CartModel>(
           (x) => CartModel.fromMap(x as Map<String, dynamic>),
         ),
       ),
-      total: map['total'] as double,
+      total: (map['total'] as num).toDouble(),
       orderId: map['orderId'] as String,
       address: AddressModel.fromMap(map['address'] as Map<String, dynamic>),
       isAccepted: map['isAccepted'] != null ? map['isAccepted'] as bool : null,
+      isCancelled: map['isCancelled'] != null
+          ? map['isCancelled'] as bool
+          : null,
       isDelivered: map['isDelivered'] != null
           ? map['isDelivered'] as bool
           : null,
@@ -86,7 +94,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(uid: $uid, products: $products, total: $total, orderId: $orderId, address: $address, isAccepted: $isAccepted, isDelivered: $isDelivered, date: $date)';
+    return 'OrderModel(uid: $uid, products: $products, total: $total, orderId: $orderId, address: $address, isAccepted: $isAccepted, isCancelled: $isCancelled, isDelivered: $isDelivered, date: $date)';
   }
 
   @override
@@ -99,6 +107,7 @@ class OrderModel {
         other.orderId == orderId &&
         other.address == address &&
         other.isAccepted == isAccepted &&
+        other.isCancelled == isCancelled &&
         other.isDelivered == isDelivered &&
         other.date == date;
   }
@@ -111,6 +120,7 @@ class OrderModel {
         orderId.hashCode ^
         address.hashCode ^
         isAccepted.hashCode ^
+        isCancelled.hashCode ^
         isDelivered.hashCode ^
         date.hashCode;
   }

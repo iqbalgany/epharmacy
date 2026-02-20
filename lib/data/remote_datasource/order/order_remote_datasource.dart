@@ -2,24 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:epharmacy/constants/firebase_constans.dart';
 import 'package:epharmacy/core/failure.dart';
 import 'package:epharmacy/data/models/order_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
 
 class OrderRemoteDatasource {
   final FirebaseFirestore _firebaseFirestore;
-  final FirebaseAuth _firebaseAuth;
-  OrderRemoteDatasource(this._firebaseFirestore, this._firebaseAuth);
+  OrderRemoteDatasource(this._firebaseFirestore);
 
   CollectionReference<OrderModel> get _ordersRef => _firebaseFirestore
       .collection(FirebaseConstans.orders)
-      .withConverter(
-        fromFirestore: (snapshot, _) => OrderModel.fromJson(snapshot.data()!),
-        toFirestore: (order, _) => order.toJson(),
+      .withConverter<OrderModel>(
+        fromFirestore: (snapshot, _) => OrderModel.fromMap(snapshot.data()!),
+        toFirestore: (order, _) => order.toMap(),
       );
 
   Future<Either<dynamic, Unit>> createOrder(OrderModel order) async {
     try {
-      await _orders.doc(order.orderId).set(order.toJson());
+      await _ordersRef.doc(order.orderId).set(order);
 
       return Right(unit);
     } catch (e) {
@@ -28,12 +26,12 @@ class OrderRemoteDatasource {
   }
 
   Stream<List<OrderModel>> getUserOrders(String userId) {
-    return _orders.where('uid', isEqualTo: userId).snapshots().map((event) {
-      List<OrderModel> orders = [];
-      for (var doc in event.docs) {
-        orders.add(OrderModel.fromJson(doc.data() as Map<String, dynamic>));
-      }
-      return orders;
-    });
+    return _ordersRef
+        .where('uid', isEqualTo: userId)
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) => doc.data()).toList();
+        });
   }
 }
