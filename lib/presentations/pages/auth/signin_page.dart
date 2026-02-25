@@ -122,6 +122,13 @@ class _SigninPageState extends State<SigninPage> {
                         ),
                       );
                     }
+                    if (state.status == AuthStatus.success) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainPage()),
+                        (route) => false,
+                      );
+                    }
                   },
                   child: SizedBox(
                     width: MediaQuery.sizeOf(context).width,
@@ -132,11 +139,6 @@ class _SigninPageState extends State<SigninPage> {
                           context.read<AuthCubit>().signIn(
                             email: _emailController.text.trim(),
                             password: _passwordController.text.trim(),
-                          );
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => MainPage()),
-                            (route) => false,
                           );
                         } else {
                           null;

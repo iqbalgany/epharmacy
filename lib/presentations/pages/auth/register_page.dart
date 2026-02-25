@@ -1,4 +1,5 @@
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
+import 'package:epharmacy/presentations/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -211,10 +212,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
 
                     if (state.status == AuthStatus.success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Registration Successful')),
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainPage(intialIndex: 0),
+                        ),
+                        (route) => false,
                       );
-                      Navigator.pop(context);
                     }
                   },
                   child: SizedBox(

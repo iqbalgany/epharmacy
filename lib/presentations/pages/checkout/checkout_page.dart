@@ -1,5 +1,7 @@
 import 'package:epharmacy/presentations/cubits/address/address_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
+import 'package:epharmacy/presentations/cubits/order/order_cubit.dart';
+import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
 import 'package:epharmacy/presentations/widgets/cart_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,8 +24,8 @@ class CheckoutPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: BlocBuilder<AddressCubit, AddressState>(
-        builder: (context, state) {
-          final address = state.address;
+        builder: (context, addressState) {
+          final address = addressState.address;
           return Column(
             children: [
               SizedBox(height: 20),
@@ -155,17 +157,17 @@ class CheckoutPage extends StatelessWidget {
               ),
               Expanded(
                 child: BlocBuilder<CartCubit, CartState>(
-                  builder: (context, state) {
-                    if (state.carts == null || state.carts!.isEmpty) {
+                  builder: (context, cartState) {
+                    if (cartState.carts == null || cartState.carts!.isEmpty) {
                       return Center(child: Text('No items in cart'));
                     }
                     return ListView.separated(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      itemCount: state.carts!.length + 1,
+                      itemCount: cartState.carts!.length + 1,
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
                       itemBuilder: (context, index) {
-                        if (index == state.carts!.length) {
+                        if (index == cartState.carts!.length) {
                           return Column(
                             children: [
                               Row(
@@ -181,7 +183,7 @@ class CheckoutPage extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '\$${state.grandTotal.toString()}',
+                                    '\$${cartState.grandTotal.toString()}',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
@@ -191,35 +193,66 @@ class CheckoutPage extends StatelessWidget {
                                 ],
                               ),
                               SizedBox(height: 20),
-                              SizedBox(
-                                width: MediaQuery.sizeOf(context).width,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
+                              BlocBuilder<ProfileCubit, ProfileState>(
+                                builder: (context, state) {
+                                  final currentUser = state.user;
+                                  return SizedBox(
+                                    width: MediaQuery.sizeOf(context).width,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 10,
+                                        ),
 
-                                    backgroundColor: Colors.blue,
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                        backgroundColor: Colors.blue,
+                                        elevation: 2,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        if (currentUser != null &&
+                                            address != null) {
+                                          context
+                                              .read<OrderCubit>()
+                                              .createOrder(
+                                                currentUser.uid,
+                                                currentUser,
+                                                address,
+                                                cartState.grandTotal,
+                                              );
+                                        } else {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Data user atau alamat belum lengkap',
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Text(
+                                        'Place Order',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  onPressed: () {},
-                                  child: Text(
-                                    'Place Order',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
                               SizedBox(height: 50),
                             ],
                           );
                         }
 
-                        final item = state.carts![index];
+                        final item = cartState.carts![index];
                         return CartItemWidget(item: item);
                       },
                     );
