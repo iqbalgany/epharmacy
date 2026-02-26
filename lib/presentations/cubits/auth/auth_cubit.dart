@@ -10,7 +10,13 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final AuthRemoteDatasource _authRemoteDatasource;
   late StreamSubscription<User?> _userSubscription;
-  AuthCubit(this._authRemoteDatasource) : super(const AuthState());
+  AuthCubit(this._authRemoteDatasource) : super(const AuthState()) {
+    _userSubscription = _authRemoteDatasource.authStatechange.listen((user) {
+      if (user != null) {
+        emit(state.copyWith(status: AuthStatus.success));
+      }
+    });
+  }
 
   Future<void> signIn({required String email, required String password}) async {
     emit(state.copyWith(status: AuthStatus.loading));

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/models/address_model.dart';
+import 'package:epharmacy/data/models/cart_model.dart';
 import 'package:epharmacy/data/models/order_model.dart';
 import 'package:epharmacy/data/models/user_model.dart';
 import 'package:epharmacy/data/remote_datasource/order/order_remote_datasource.dart';
@@ -10,30 +11,44 @@ part 'order_state.dart';
 
 class OrderCubit extends Cubit<OrderState> {
   final OrderRemoteDatasource _orderRemoteDatasource;
+
   OrderCubit(this._orderRemoteDatasource) : super(const OrderState());
 
-  Future<void> createOrder(
-    String uid,
-    UserModel user,
-    AddressModel address,
-    double total,
-  ) async {
+  Future<void> createOrder({
+    required String uid,
+    required UserModel user,
+    required AddressModel address,
+    required double total,
+    required List<CartModel> products,
+  }) async {
     emit(state.copyWith(status: OrderStatus.loading));
+
     try {
       String orderId = const Uuid().v1();
 
-      final newOrder = OrderModel(
-            uid: uid,
-            products: user.cart!.toList(),
-            total: total,
-            orderId: orderId,
-            address: address,
-            date: DateTime.now(),
-            isAccepted: false,
-            isCancelled: false,
-            isDelivered: false,
+      if (products.isEmpty) {
+        emit(
+          state.copyWith(
+            status: OrderStatus.error,
+            errorMessage: 'Cart is empty',
           ),
-          result = await _orderRemoteDatasource.createOrder(newOrder);
+        );
+        return;
+      }
+
+      final newOrder = OrderModel(
+        uid: uid,
+        products: products,
+        total: total,
+        orderId: orderId,
+        address: address,
+        date: DateTime.now(),
+        isAccepted: false,
+        isCancelled: false,
+        isDelivered: false,
+      );
+
+      final result = await _orderRemoteDatasource.createOrder(newOrder);
 
       result.fold(
         (failure) {

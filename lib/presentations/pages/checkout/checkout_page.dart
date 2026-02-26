@@ -1,3 +1,4 @@
+import 'package:epharmacy/data/models/cart_model.dart';
 import 'package:epharmacy/presentations/cubits/address/address_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/order/order_cubit.dart';
@@ -158,16 +159,19 @@ class CheckoutPage extends StatelessWidget {
               Expanded(
                 child: BlocBuilder<CartCubit, CartState>(
                   builder: (context, cartState) {
-                    if (cartState.carts == null || cartState.carts!.isEmpty) {
+                    final List<CartModel>? carts = cartState.carts;
+
+                    if (carts == null || carts.isEmpty) {
                       return Center(child: Text('No items in cart'));
                     }
+
                     return ListView.separated(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      itemCount: cartState.carts!.length + 1,
+                      itemCount: carts.length + 1,
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
                       itemBuilder: (context, index) {
-                        if (index == cartState.carts!.length) {
+                        if (index == carts.length) {
                           return Column(
                             children: [
                               Row(
@@ -194,53 +198,101 @@ class CheckoutPage extends StatelessWidget {
                               ),
                               SizedBox(height: 20),
                               BlocBuilder<ProfileCubit, ProfileState>(
-                                builder: (context, state) {
-                                  final currentUser = state.user;
-                                  return SizedBox(
-                                    width: MediaQuery.sizeOf(context).width,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 10,
-                                        ),
+                                builder: (context, profileState) {
+                                  final currentUser = profileState.user;
+                                  return BlocListener<OrderCubit, OrderState>(
+                                    listener: (context, orderState) {
+                                      if (orderState.status ==
+                                          OrderStatus.error) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: Colors.red,
+                                            content: Text(
+                                              orderState.errorMessage
+                                                  .toString(),
+                                            ),
+                                          ),
+                                        );
+                                      }
 
-                                        backgroundColor: Colors.blue,
-                                        elevation: 2,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
+                                      if (orderState.status ==
+                                          OrderStatus.success) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: Colors.green,
+                                            content: Text('Success'),
+                                          ),
+                                        );
+
+                                        context.read<CartCubit>().clearCart();
+
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: SizedBox(
+                                      width: MediaQuery.sizeOf(context).width,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 10,
+                                          ),
+                                          backgroundColor: Colors.blue,
+                                          elevation: 2,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      onPressed: () {
-                                        if (currentUser != null &&
-                                            address != null) {
-                                          context
-                                              .read<OrderCubit>()
-                                              .createOrder(
-                                                currentUser.uid,
-                                                currentUser,
-                                                address,
-                                                cartState.grandTotal,
+                                        onPressed: () {
+                                          if (currentUser != null &&
+                                              address != null) {
+                                            final uid = currentUser.uid;
+
+                                            if (uid.isNotEmpty) {
+                                              context
+                                                  .read<OrderCubit>()
+                                                  .createOrder(
+                                                    uid: currentUser.uid,
+                                                    user: currentUser,
+                                                    address: address,
+                                                    total: cartState.grandTotal,
+                                                    products: carts,
+                                                  );
+                                            } else {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'User ID tidak valid',
+                                                  ),
+                                                ),
                                               );
-                                        } else {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'Data user atau alamat belum lengkap',
+                                            }
+                                          } else {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Data user atau alamat belum lengkap',
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Text(
-                                        'Place Order',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          'Place Order',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -252,7 +304,7 @@ class CheckoutPage extends StatelessWidget {
                           );
                         }
 
-                        final item = cartState.carts![index];
+                        final item = carts[index];
                         return CartItemWidget(item: item);
                       },
                     );

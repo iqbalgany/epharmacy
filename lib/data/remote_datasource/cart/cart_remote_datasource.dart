@@ -156,7 +156,8 @@ class CartRemoteDatasource {
       await _firebaseFirestore
           .collection(FirebaseConstans.carts)
           .doc(uid)
-          .update({'cart': FieldValue.delete()});
+          .update({'cart': []});
+
       return Right(unit);
     } catch (e) {
       return Left(Failure(message: e.toString()));
