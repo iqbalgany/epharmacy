@@ -211,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       );
                     }
 
-                    if (state.status == AuthStatus.success) {
+                    if (state.status == AuthStatus.authenticated) {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(

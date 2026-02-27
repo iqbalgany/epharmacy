@@ -13,7 +13,7 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._authRemoteDatasource) : super(const AuthState()) {
     _userSubscription = _authRemoteDatasource.authStatechange.listen((user) {
       if (user != null) {
-        emit(state.copyWith(status: AuthStatus.success));
+        emit(state.copyWith(status: AuthStatus.authenticated));
       }
     });
   }
@@ -23,7 +23,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     try {
       await _authRemoteDatasource.signInWithEmailAndPassword(email, password);
-      emit(state.copyWith(status: AuthStatus.success));
+      emit(state.copyWith(status: AuthStatus.authenticated));
     } on FirebaseAuthException catch (e) {
       emit(
         state.copyWith(
@@ -55,7 +55,7 @@ class AuthCubit extends Cubit<AuthState> {
         lastName: lastName,
         profileImage: profileImage,
       );
-      emit(state.copyWith(status: AuthStatus.success));
+      emit(state.copyWith(status: AuthStatus.authenticated));
     } on FirebaseAuthException catch (e) {
       emit(
         state.copyWith(
@@ -74,7 +74,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
       await _authRemoteDatasource.signOut();
-      emit(state.copyWith(status: AuthStatus.success));
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
     } catch (e) {
       emit(
         state.copyWith(

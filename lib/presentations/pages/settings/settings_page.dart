@@ -122,7 +122,7 @@ class SettingsPage extends StatelessWidget {
                 Divider(thickness: 2),
                 BlocListener<AuthCubit, AuthState>(
                   listener: (context, state) {
-                    if (state.status == AuthStatus.success) {
+                    if (state.status == AuthStatus.unauthenticated) {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => SigninPage()),

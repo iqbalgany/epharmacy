@@ -104,7 +104,7 @@ class _RelatedProductWidgetState extends State<RelatedProductWidget> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
                       ],
                     ),
                   ),

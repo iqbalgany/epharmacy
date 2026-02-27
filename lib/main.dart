@@ -31,7 +31,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await FirebaseAppCheck.instance.activate(
-    providerAndroid: AndroidDebugProvider(),
+    providerAndroid: AndroidPlayIntegrityProvider(),
   );
 
   await Hive.initFlutter();
@@ -97,6 +97,8 @@ class MyApp extends StatelessWidget {
               );
             } else if (snapshot.hasData) {
               return const MainPage(intialIndex: 0);
+            } else if (snapshot.hasError) {
+              return const Scaffold(body: Center(child: Text('System Error')));
             } else {
               return const SigninPage();
             }

@@ -122,7 +122,7 @@ class _SigninPageState extends State<SigninPage> {
                         ),
                       );
                     }
-                    if (state.status == AuthStatus.success) {
+                    if (state.status == AuthStatus.authenticated) {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => MainPage()),
