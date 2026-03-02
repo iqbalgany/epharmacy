@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
+import 'package:epharmacy/presentations/cubits/order/order_cubit.dart';
 import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
 import 'package:epharmacy/presentations/pages/address/address_page.dart';
 import 'package:epharmacy/presentations/pages/auth/signin_page.dart';
+import 'package:epharmacy/presentations/pages/order/my_order_screen.dart';
 import 'package:epharmacy/presentations/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,16 +97,51 @@ class SettingsPage extends StatelessWidget {
                   trailing: Icon(Icons.arrow_forward_ios_rounded, size: 20),
                 ),
                 Divider(thickness: 2),
+                Text(
+                  'DEBUG - User ID: ${context.watch<AuthCubit>().state.user?.uid ?? "KOSONG"}',
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 ListTile(
+                  onTap: () {
+                    final authState = context.read<AuthCubit>().state;
+                    final userId = authState.user?.uid;
+
+                    // 👇 TAMBAHKAN 3 BARIS INI 👇
+                    log('--- DEBUGGING AUTH ---');
+                    log('Status AuthCubit saat ini: ${authState.status}');
+                    log('User ID saat ini: $userId');
+                    log('----------------------');
+
+                    if (userId != null) {
+                      context.read<OrderCubit>().fetchUserOrders(userId);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyOrderScreen(),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Wait a second, user data is loading...',
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   leading: Text(
-                    'Track Order Status',
+                    'My Orders',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   trailing: Icon(Icons.arrow_forward_ios_rounded, size: 20),
                 ),
                 Divider(thickness: 2),

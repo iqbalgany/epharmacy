@@ -16,6 +16,17 @@ class AuthCubit extends Cubit<AuthState> {
         emit(state.copyWith(status: AuthStatus.authenticated));
       }
     });
+
+    checkAuthStatus();
+  }
+  void checkAuthStatus() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      emit(state.copyWith(status: AuthStatus.authenticated, user: currentUser));
+    } else {
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
+    }
   }
 
   Future<void> signIn({required String email, required String password}) async {

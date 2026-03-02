@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/models/address_model.dart';
 import 'package:epharmacy/data/models/cart_model.dart';
@@ -11,6 +13,8 @@ part 'order_state.dart';
 
 class OrderCubit extends Cubit<OrderState> {
   final OrderRemoteDatasource _orderRemoteDatasource;
+
+  StreamSubscription<List<OrderModel>>? _orderSubscription;
 
   OrderCubit(this._orderRemoteDatasource) : super(const OrderState());
 
@@ -70,7 +74,33 @@ class OrderCubit extends Cubit<OrderState> {
     }
   }
 
-  Stream<List<OrderModel>> getUserOrders(String userId) {
-    return _orderRemoteDatasource.getUserOrders(userId);
+  void fetchUserOrders(String userId) {
+    emit(state.copyWith(status: OrderStatus.loading));
+
+    _orderSubscription?.cancel();
+
+    _orderSubscription = _orderRemoteDatasource
+        .getUserOrders(userId)
+        .listen(
+          (orderList) {
+            emit(
+              state.copyWith(status: OrderStatus.success, orders: orderList),
+            );
+          },
+          onError: (error) {
+            emit(
+              state.copyWith(
+                status: OrderStatus.error,
+                errorMessage: error.toString(),
+              ),
+            );
+          },
+        );
+  }
+
+  @override
+  Future<void> close() {
+    _orderSubscription?.cancel();
+    return super.close();
   }
 }
