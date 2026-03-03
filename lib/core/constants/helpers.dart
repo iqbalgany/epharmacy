@@ -35,4 +35,10 @@ class Helpers {
       return null;
     }
   }
+
+  static String calculateAmount(String amount) {
+    final doubleAmount = double.parse(amount);
+    final calculatedAmount = (doubleAmount * 100).toInt();
+    return calculatedAmount.toString();
+  }
 }

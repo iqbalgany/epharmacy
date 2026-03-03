@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:epharmacy/constants/helpers.dart';
+import 'package:epharmacy/core/constants/helpers.dart';
 import 'package:epharmacy/data/models/user_model.dart';
 import 'package:epharmacy/data/remote_datasource/auth/auth_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/profile/profile_remote_datasource.dart';

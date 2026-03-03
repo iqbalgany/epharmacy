@@ -113,20 +113,20 @@ class _SigninPageState extends State<SigninPage> {
                   listenWhen: (previous, current) =>
                       previous.status != current.status,
                   listener: (context, state) {
-                    if (state.status == AuthStatus.failure) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            state.errorMessage ?? 'Authentication Error',
-                          ),
-                        ),
-                      );
-                    }
                     if (state.status == AuthStatus.authenticated) {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => MainPage()),
                         (route) => false,
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text(
+                            state.errorMessage ?? 'Authentication Error',
+                          ),
+                        ),
                       );
                     }
                   },

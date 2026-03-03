@@ -1,3 +1,4 @@
+import 'package:epharmacy/core/utils/formatters.dart';
 import 'package:epharmacy/data/models/cart_model.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class OrderItemWidget extends StatelessWidget {
       ),
       leading: Image.network(item.image ?? '', height: 30, width: 30),
       trailing: Text(
-        '\$${item.price}',
+        AppFormatters.formatRupiah(item.price ?? 0),
         style: TextStyle(
           color: Colors.black,
           fontSize: 18,

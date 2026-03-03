@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/order/order_cubit.dart';
@@ -97,26 +96,14 @@ class SettingsPage extends StatelessWidget {
                   trailing: Icon(Icons.arrow_forward_ios_rounded, size: 20),
                 ),
                 Divider(thickness: 2),
-                Text(
-                  'DEBUG - User ID: ${context.watch<AuthCubit>().state.user?.uid ?? "KOSONG"}',
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+
                 ListTile(
                   onTap: () {
                     final authState = context.read<AuthCubit>().state;
-                    final userId = authState.user?.uid;
+                    final user = authState.user;
 
-                    // 👇 TAMBAHKAN 3 BARIS INI 👇
-                    log('--- DEBUGGING AUTH ---');
-                    log('Status AuthCubit saat ini: ${authState.status}');
-                    log('User ID saat ini: $userId');
-                    log('----------------------');
-
-                    if (userId != null) {
-                      context.read<OrderCubit>().fetchUserOrders(userId);
+                    if (user != null && user.uid.isNotEmpty) {
+                      context.read<OrderCubit>().fetchUserOrders(user.uid);
 
                       Navigator.push(
                         context,
@@ -128,7 +115,7 @@ class SettingsPage extends StatelessWidget {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Wait a second, user data is loading...',
+                            'Sesi login tidak valid atau data user kosong',
                           ),
                         ),
                       );

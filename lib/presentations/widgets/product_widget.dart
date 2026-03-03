@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:epharmacy/constants/helpers.dart';
+import 'package:epharmacy/core/constants/helpers.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
 import 'package:epharmacy/presentations/cubits/wishlist/wishlist_cubit.dart';

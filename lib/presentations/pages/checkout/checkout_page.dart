@@ -3,6 +3,7 @@ import 'package:epharmacy/presentations/cubits/address/address_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/order/order_cubit.dart';
 import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
+import 'package:epharmacy/presentations/cubits/stripe/stripe_cubit.dart';
 import 'package:epharmacy/presentations/widgets/cart_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -262,6 +263,12 @@ class CheckoutPage extends StatelessWidget {
                                                     address: address,
                                                     total: cartState.grandTotal,
                                                     products: carts,
+                                                  );
+
+                                              context
+                                                  .read<StripeCubit>()
+                                                  .processStripePayment(
+                                                    cartState.grandTotal,
                                                   );
                                             } else {
                                               ScaffoldMessenger.of(

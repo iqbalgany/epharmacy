@@ -1,3 +1,4 @@
+import 'package:epharmacy/core/utils/formatters.dart';
 import 'package:epharmacy/presentations/cubits/order/order_cubit.dart';
 import 'package:epharmacy/presentations/widgets/order_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,9 @@ class MyOrderScreen extends StatelessWidget {
                     Card(
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.blue, width: 2),
+                          color: Colors.white,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -47,20 +50,21 @@ class MyOrderScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Order Id',
+                                        'Order Id:',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.bold,
                                           fontSize: 18,
                                         ),
                                       ),
+                                      SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
                                           order.orderId,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 10,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
@@ -72,20 +76,21 @@ class MyOrderScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Date',
+                                        'Date:',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.bold,
                                           fontSize: 18,
                                         ),
                                       ),
+                                      SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
                                           DateFormat.yMMM().format(order.date),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 10,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
@@ -97,20 +102,23 @@ class MyOrderScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Total',
+                                        'Total:',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.bold,
                                           fontSize: 18,
                                         ),
                                       ),
+                                      SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
-                                          '\$${order.total}',
+                                          AppFormatters.formatRupiah(
+                                            order.total,
+                                          ),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 10,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
@@ -137,53 +145,83 @@ class MyOrderScreen extends StatelessWidget {
                         order.isCancelled == false &&
                         order.isDelivered == false) ...{
                       Positioned(
-                        top: 2,
-                        right: 0,
+                        top: 10,
+                        right: 10,
                         child: Container(
+                          padding: EdgeInsets.all(3),
                           decoration: BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: Text('Accepted'),
+                          child: Text(
+                            'Accepted',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                       ),
                     } else if (order.isAccepted == true &&
                         order.isDelivered == true) ...{
                       Positioned(
-                        top: 2,
-                        right: 0,
+                        top: 10,
+                        right: 10,
                         child: Container(
+                          padding: EdgeInsets.all(3),
+
                           decoration: BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: Text('Delivered'),
+                          child: Text(
+                            'Delivered',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                       ),
                     } else if (order.isCancelled == true) ...{
                       Positioned(
-                        top: 2,
-                        right: 0,
+                        top: 10,
+                        right: 10,
                         child: Container(
+                          padding: EdgeInsets.all(3),
+
                           decoration: BoxDecoration(
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: Text('Canceled'),
+                          child: Text(
+                            'Canceled',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                       ),
                     } else if (order.isCancelled == false &&
                         order.isAccepted == false &&
                         order.isDelivered == false) ...{
                       Positioned(
-                        top: 2,
-                        right: 0,
+                        top: 10,
+                        right: 10,
                         child: Container(
+                          padding: EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: Colors.grey,
+                            color: Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: Text('isPending'),
+                          child: Text(
+                            'Pending',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                       ),
                     },

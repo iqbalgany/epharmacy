@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:epharmacy/constants/firebase_constans.dart';
+import 'package:epharmacy/core/constants/firebase_constans.dart';
 import 'package:epharmacy/core/failure.dart';
 import 'package:epharmacy/data/models/cart_model.dart';
 import 'package:epharmacy/data/models/product_model.dart';
