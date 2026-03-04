@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/remote_datasource/stripe/stripe_remote_datasource.dart';
 import 'package:equatable/equatable.dart';
@@ -15,11 +17,13 @@ class StripeCubit extends Cubit<StripeState> {
     emit(state.copyWith(status: StripeStatus.loading));
 
     try {
+      log("Step 1: Creating Intent");
       final paymentIntent = await _stripeRemoteDatasource.createPaymentIntent(
         amount.toString(),
         'IDR',
       );
 
+      log("Step 2: Initializing Payment Sheet");
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           customFlow: false,
@@ -37,10 +41,12 @@ class StripeCubit extends Cubit<StripeState> {
         ),
       );
 
+      log("Step 3: Presenting Payment Sheet");
       await Stripe.instance.presentPaymentSheet();
 
       emit(state.copyWith(status: StripeStatus.success));
     } catch (e) {
+      log("Stripe Error: $e");
       if (e is StripeException) {
         emit(
           state.copyWith(

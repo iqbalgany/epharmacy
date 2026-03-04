@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:epharmacy/data/models/cart_model.dart';
 import 'package:epharmacy/presentations/cubits/address/address_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
@@ -198,113 +200,138 @@ class CheckoutPage extends StatelessWidget {
                                 ],
                               ),
                               SizedBox(height: 20),
-                              BlocBuilder<ProfileCubit, ProfileState>(
-                                builder: (context, profileState) {
-                                  final currentUser = profileState.user;
-                                  return BlocListener<OrderCubit, OrderState>(
-                                    listener: (context, orderState) {
-                                      if (orderState.status ==
-                                          OrderStatus.error) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            backgroundColor: Colors.red,
-                                            content: Text(
-                                              orderState.errorMessage
-                                                  .toString(),
-                                            ),
-                                          ),
-                                        );
-                                      }
+                              BlocListener<StripeCubit, StripeState>(
+                                listener: (context, stripeState) {
+                                  if (stripeState.status ==
+                                      StripeStatus.success) {
+                                    final currentUser = context
+                                        .read<ProfileCubit>()
+                                        .state
+                                        .user;
 
-                                      if (orderState.status ==
-                                          OrderStatus.success) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            backgroundColor: Colors.green,
-                                            content: Text('Success'),
-                                          ),
-                                        );
-
-                                        context.read<CartCubit>().clearCart();
-
-                                        Navigator.pop(context);
-                                      }
-                                    },
-                                    child: SizedBox(
-                                      width: MediaQuery.sizeOf(context).width,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 10,
-                                          ),
-                                          backgroundColor: Colors.blue,
-                                          elevation: 2,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
+                                    if (currentUser != null &&
+                                        address != null) {
+                                      context.read<OrderCubit>().createOrder(
+                                        uid: currentUser.uid,
+                                        user: currentUser,
+                                        address: address,
+                                        total: cartState.grandTotal,
+                                        products: carts,
+                                      );
+                                    }
+                                  } else if (stripeState.status ==
+                                      StripeStatus.failure) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                          'Pembayaran Gagal : ${stripeState.errorMessage}',
                                         ),
-                                        onPressed: () {
-                                          if (currentUser != null &&
-                                              address != null) {
-                                            final uid = currentUser.uid;
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: BlocBuilder<ProfileCubit, ProfileState>(
+                                  builder: (context, profileState) {
+                                    final currentUser = profileState.user;
+                                    return BlocListener<OrderCubit, OrderState>(
+                                      listener: (context, orderState) {
+                                        if (orderState.status ==
+                                            OrderStatus.error) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                orderState.errorMessage
+                                                    .toString(),
+                                              ),
+                                            ),
+                                          );
+                                        }
 
-                                            if (uid.isNotEmpty) {
-                                              context
-                                                  .read<OrderCubit>()
-                                                  .createOrder(
-                                                    uid: currentUser.uid,
-                                                    user: currentUser,
-                                                    address: address,
-                                                    total: cartState.grandTotal,
-                                                    products: carts,
-                                                  );
+                                        if (orderState.status ==
+                                            OrderStatus.success) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: Colors.green,
+                                              content: Text('Success'),
+                                            ),
+                                          );
 
+                                          context.read<CartCubit>().clearCart();
+
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                      child: SizedBox(
+                                        width: MediaQuery.sizeOf(context).width,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 10,
+                                            ),
+                                            backgroundColor: Colors.blue,
+                                            elevation: 2,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            if (currentUser != null &&
+                                                address != null) {
+                                              log(
+                                                "Memulai Pembayaran Stripe...",
+                                              );
                                               context
                                                   .read<StripeCubit>()
                                                   .processStripePayment(
                                                     cartState.grandTotal,
                                                   );
+                                              // final uid = currentUser.uid;
+
+                                              // if (uid.isNotEmpty) {
+                                              //
+                                              // } else {
+                                              //   ScaffoldMessenger.of(
+                                              //     context,
+                                              //   ).showSnackBar(
+                                              //     SnackBar(
+                                              //       content: Text(
+                                              //         'User ID tidak valid',
+                                              //       ),
+                                              //     ),
+                                              //   );
+                                              // }
                                             } else {
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'User ID tidak valid',
+                                                    'Data user atau alamat belum lengkap',
                                                   ),
                                                 ),
                                               );
                                             }
-                                          } else {
-                                            ScaffoldMessenger.of(
-                                              context,
-                                            ).showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  'Data user atau alamat belum lengkap',
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: Text(
-                                          'Place Order',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
+                                          },
+                                          child: Text(
+                                            'Place Order',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
                               ),
                               SizedBox(height: 50),
                             ],

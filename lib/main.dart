@@ -42,7 +42,10 @@ void main() async {
   await Hive.initFlutter();
 
   Stripe.publishableKey = ApiConstants.apiKey;
+
   Stripe.merchantIdentifier = 'Gany';
+
+  await Stripe.instance.applySettings();
 
   Hive.registerAdapter(ProductModelAdapter());
 

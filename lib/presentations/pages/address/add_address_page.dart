@@ -93,7 +93,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
                     controller: _houseNumberController,
                     enableSuggestions: true,
                     keyboardType: TextInputType.streetAddress,
-
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
