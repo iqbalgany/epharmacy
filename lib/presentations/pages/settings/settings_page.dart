@@ -10,6 +10,7 @@ import 'package:epharmacy/presentations/pages/order/my_order_screen.dart';
 import 'package:epharmacy/presentations/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -25,33 +26,53 @@ class SettingsPage extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 60),
-                Center(
-                  child: (base64String != null && base64String.isNotEmpty)
-                      ? Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.black),
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: MemoryImage(base64Decode(base64String)),
+                if (state.status == ProfileStatus.loading) ...{
+                  Shimmer(
+                    enabled: true,
+                    colorOpacity: 0.3,
+                    duration: Duration(seconds: 2),
+                    interval: Duration(milliseconds: 500),
+                    color: Colors.grey.shade300,
+                    direction: ShimmerDirection.fromLBRT(),
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                } else ...{
+                  Center(
+                    child: (base64String != null && base64String.isNotEmpty)
+                        ? Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black),
+                              image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image: MemoryImage(base64Decode(base64String)),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black),
+                              image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image: AssetImage('assets/profile.jpg'),
+                              ),
                             ),
                           ),
-                        )
-                      : Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.black),
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: AssetImage('assets/profile.jpg'),
-                            ),
-                          ),
-                        ),
-                ),
+                  ),
+                },
+
                 SizedBox(height: 8),
                 Text(
                   user?.firstName == null || user?.lastName == null

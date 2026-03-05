@@ -87,7 +87,7 @@ class WishlistPage extends StatelessWidget {
                             direction: ShimmerDirection.fromLBRT(),
                             child: Container(
                               width: MediaQuery.sizeOf(context).width * 0.25,
-                              height: MediaQuery.sizeOf(context).width * 0.1,
+                              height: MediaQuery.sizeOf(context).width * 0.25,
                               color: Colors.grey.shade300,
                             ),
                           ),
