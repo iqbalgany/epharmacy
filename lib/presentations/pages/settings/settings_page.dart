@@ -96,14 +96,13 @@ class SettingsPage extends StatelessWidget {
                   trailing: Icon(Icons.arrow_forward_ios_rounded, size: 20),
                 ),
                 Divider(thickness: 2),
-
                 ListTile(
                   onTap: () {
                     final authState = context.read<AuthCubit>().state;
-                    final user = authState.user;
+                    final userId = authState.user?.uid;
 
-                    if (user != null && user.uid.isNotEmpty) {
-                      context.read<OrderCubit>().fetchUserOrders(user.uid);
+                    if (userId != null) {
+                      context.read<OrderCubit>().fetchUserOrders(userId);
 
                       Navigator.push(
                         context,
@@ -114,6 +113,8 @@ class SettingsPage extends StatelessWidget {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          duration: Duration(milliseconds: 1500),
+
                           content: Text(
                             'Sesi login tidak valid atau data user kosong',
                           ),
@@ -158,6 +159,8 @@ class SettingsPage extends StatelessWidget {
                     if (state.status == AuthStatus.failure) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          duration: Duration(milliseconds: 1500),
+
                           content: Text(
                             state.errorMessage ?? 'Failed to Sign Out',
                           ),

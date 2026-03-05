@@ -8,6 +8,7 @@ import 'package:epharmacy/data/remote_datasource/auth/auth_remote_datasource.dar
 import 'package:epharmacy/data/remote_datasource/cart/cart_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/categories/categories_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/order/order_remote_datasource.dart';
+import 'package:epharmacy/data/remote_datasource/payment/payment_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/product/product_remote_datasource.dart';
 import 'package:epharmacy/data/remote_datasource/stripe/stripe_remote_datasource.dart';
 import 'package:epharmacy/firebase_options.dart';
@@ -16,6 +17,7 @@ import 'package:epharmacy/presentations/cubits/auth/auth_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
 import 'package:epharmacy/presentations/cubits/categories/categories_cubit.dart';
 import 'package:epharmacy/presentations/cubits/order/order_cubit.dart';
+import 'package:epharmacy/presentations/cubits/payment/payment_cubit.dart';
 import 'package:epharmacy/presentations/cubits/product/product_cubit.dart';
 import 'package:epharmacy/presentations/cubits/profile/profile_cubit.dart';
 import 'package:epharmacy/presentations/cubits/stripe/stripe_cubit.dart';
@@ -90,7 +92,14 @@ class MyApp extends StatelessWidget {
               OrderCubit(OrderRemoteDatasource(FirebaseFirestore.instance)),
         ),
         BlocProvider(
-          create: (context) => StripeCubit(StripeRemoteDatasource(Dio())),
+          create: (context) =>
+              PaymentCubit(PaymentRemoteDatasource(FirebaseFirestore.instance)),
+        ),
+        BlocProvider(
+          create: (context) => StripeCubit(
+            StripeRemoteDatasource(Dio()),
+            context.read<PaymentCubit>(),
+          ),
         ),
       ],
       child: MaterialApp(

@@ -53,6 +53,7 @@ dependencies:
   firebase_app_check: ^0.4.1+4
   flutter_stripe: ^12.3.0
   dio: ^5.9.2
+  shimmer_animation: ^2.2.2+1
 
 
 dev_dependencies:

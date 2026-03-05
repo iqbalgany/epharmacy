@@ -7,4 +7,5 @@ class FirebaseConstans {
   static const orders = 'orders';
   static const users = 'users';
   static const address = 'address';
+  static const payments = 'payments';
 }

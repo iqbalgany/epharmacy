@@ -9,7 +9,9 @@ part 'address_state.dart';
 
 class AddressCubit extends Cubit<AddressState> {
   final AddressRemoteDatasource _addressRemoteDatasource;
-  AddressCubit(this._addressRemoteDatasource) : super(const AddressState());
+  AddressCubit(this._addressRemoteDatasource) : super(const AddressState()) {
+    getAddress();
+  }
 
   StreamSubscription? _cartSubscription;
 

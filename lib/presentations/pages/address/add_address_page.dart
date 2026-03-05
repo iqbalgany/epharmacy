@@ -144,6 +144,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                       if (state.status == AddressStatus.error) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            duration: Duration(milliseconds: 1500),
                             backgroundColor: Colors.red,
                             content: Text(
                               state.errorMessage ?? 'Failed to add address',
@@ -155,6 +156,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                       if (state.status == AddressStatus.success) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            duration: Duration(milliseconds: 1500),
                             backgroundColor: Colors.green,
                             content: Text('Succes to add address'),
                           ),

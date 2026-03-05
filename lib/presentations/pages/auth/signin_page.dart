@@ -84,7 +84,7 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                   validator: (value) {
                     if (value!.isEmpty || value.length < 6) {
-                      return 'Password is too';
+                      return 'Password is too short';
                     }
                     return null;
                   },
@@ -119,9 +119,12 @@ class _SigninPageState extends State<SigninPage> {
                         MaterialPageRoute(builder: (context) => MainPage()),
                         (route) => false,
                       );
-                    } else {
+                    }
+                    if (state.status == AuthStatus.failure) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          duration: Duration(milliseconds: 1500),
+
                           backgroundColor: Colors.red,
                           content: Text(
                             state.errorMessage ?? 'Authentication Error',

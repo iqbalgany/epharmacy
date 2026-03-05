@@ -1,8 +1,8 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:epharmacy/data/remote_datasource/stripe/stripe_remote_datasource.dart';
+import 'package:epharmacy/presentations/cubits/payment/payment_cubit.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
@@ -10,20 +10,20 @@ part 'stripe_state.dart';
 
 class StripeCubit extends Cubit<StripeState> {
   final StripeRemoteDatasource _stripeRemoteDatasource;
+  final PaymentCubit _paymentCubit;
 
-  StripeCubit(this._stripeRemoteDatasource) : super(const StripeState());
+  StripeCubit(this._stripeRemoteDatasource, this._paymentCubit)
+    : super(const StripeState());
 
   Future<void> processStripePayment(double amount) async {
     emit(state.copyWith(status: StripeStatus.loading));
 
     try {
-      log("Step 1: Creating Intent");
       final paymentIntent = await _stripeRemoteDatasource.createPaymentIntent(
         amount.toString(),
         'IDR',
       );
 
-      log("Step 2: Initializing Payment Sheet");
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           customFlow: false,
@@ -41,12 +41,21 @@ class StripeCubit extends Cubit<StripeState> {
         ),
       );
 
-      log("Step 3: Presenting Payment Sheet");
       await Stripe.instance.presentPaymentSheet();
+
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        await _paymentCubit.createPayment(
+          paymentIntent['id'],
+          amount,
+          currentUser.uid,
+          'Succeeded',
+        );
+      }
 
       emit(state.copyWith(status: StripeStatus.success));
     } catch (e) {
-      log("Stripe Error: $e");
       if (e is StripeException) {
         emit(
           state.copyWith(

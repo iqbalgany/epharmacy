@@ -6,6 +6,7 @@ import 'package:epharmacy/presentations/cubits/wishlist/wishlist_cubit.dart';
 import 'package:epharmacy/presentations/pages/product/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class ProductWidget extends StatelessWidget {
   final String? categoryName;
@@ -16,11 +17,41 @@ class ProductWidget extends StatelessWidget {
     return BlocBuilder<ProductCubit, ProductState>(
       builder: (context, state) {
         if (state.status == ProductStatus.loading) {
-          return SizedBox(
-            height: MediaQuery.sizeOf(context).height * 0.5,
-            child: Center(child: CircularProgressIndicator()),
+          return GridView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.all(0),
+            physics: NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1.5 / 3,
+            ),
+            itemCount: 4,
+            itemBuilder: (context, index) {
+              return Shimmer(
+                duration: Duration(seconds: 2),
+                interval: Duration(milliseconds: 500),
+                color: Colors.grey.shade300,
+                colorOpacity: 0.3,
+                enabled: true,
+                direction: ShimmerDirection.fromLBRT(),
+                child: Card(
+                  margin: EdgeInsets.all(8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+              );
+            },
           );
         }
+
         if (state.status == ProductStatus.error) {
           return SizedBox(
             height: MediaQuery.sizeOf(context).height * 0.5,
@@ -88,8 +119,21 @@ class ProductWidget extends StatelessWidget {
                                   product.image,
                                   MediaQuery.sizeOf(context).width.toInt(),
                                 ),
-                                placeholder: (context, url) =>
-                                    Center(child: CircularProgressIndicator()),
+                                placeholder: (context, url) => Shimmer(
+                                  duration: Duration(seconds: 2),
+                                  interval: Duration(milliseconds: 500),
+                                  color: Colors.grey.shade300,
+                                  colorOpacity: 0.3,
+                                  enabled: true,
+                                  direction: ShimmerDirection.fromLBRT(),
+                                  child: Container(
+                                    width: MediaQuery.sizeOf(context).width,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -109,6 +153,8 @@ class ProductWidget extends StatelessWidget {
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
+                                      duration: Duration(milliseconds: 1500),
+
                                       content: Text('Product is out of stock'),
                                     ),
                                   );

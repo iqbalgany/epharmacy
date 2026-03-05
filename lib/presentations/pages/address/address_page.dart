@@ -12,24 +12,37 @@ class AddressPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddAddressPage()),
+          BlocBuilder<AddressCubit, AddressState>(
+            builder: (context, state) {
+              return GestureDetector(
+                onTap: () {
+                  if (state.address != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: Duration(milliseconds: 1500),
+                        content: Text('The address already exists'),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddAddressPage()),
+                    );
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    'Add Address',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               );
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Add Address',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
           ),
           GestureDetector(
             onTap: () {
@@ -74,7 +87,7 @@ class AddressPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Address',
+                            'City',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -82,7 +95,7 @@ class AddressPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            address?.address ?? '',
+                            address?.city ?? '',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -99,7 +112,7 @@ class AddressPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'City',
+                            'Address',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -107,7 +120,7 @@ class AddressPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            address?.city ?? '',
+                            address?.address ?? '',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,

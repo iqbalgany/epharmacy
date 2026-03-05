@@ -3,6 +3,7 @@ import 'package:epharmacy/core/constants/helpers.dart';
 import 'package:epharmacy/presentations/cubits/wishlist/wishlist_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class WishlistPage extends StatelessWidget {
   const WishlistPage({super.key});
@@ -77,10 +78,18 @@ class WishlistPage extends StatelessWidget {
                             wishlist.image,
                             (MediaQuery.sizeOf(context).width * 0.25).toInt(),
                           ),
-                          placeholder: (context, url) => Container(
-                            width: MediaQuery.sizeOf(context).width * 0.25,
-                            height: MediaQuery.sizeOf(context).width * 0.1,
+                          placeholder: (context, url) => Shimmer(
+                            duration: Duration(seconds: 2),
+                            interval: Duration(milliseconds: 500),
                             color: Colors.grey.shade300,
+                            colorOpacity: 0.3,
+                            enabled: true,
+                            direction: ShimmerDirection.fromLBRT(),
+                            child: Container(
+                              width: MediaQuery.sizeOf(context).width * 0.25,
+                              height: MediaQuery.sizeOf(context).width * 0.1,
+                              color: Colors.grey.shade300,
+                            ),
                           ),
                         ),
                       ),

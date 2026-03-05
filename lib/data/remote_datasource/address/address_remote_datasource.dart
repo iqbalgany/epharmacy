@@ -45,7 +45,7 @@ class AddressRemoteDatasource {
           if (event.exists && event.data() != null) {
             return AddressModel.fromMap(event.data() as Map<String, dynamic>);
           } else {
-            throw Exception('Alamat belum diatur');
+            return null;
           }
         });
   }

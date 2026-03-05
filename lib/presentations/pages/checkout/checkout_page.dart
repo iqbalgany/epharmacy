@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:epharmacy/data/models/cart_model.dart';
 import 'package:epharmacy/presentations/cubits/address/address_cubit.dart';
 import 'package:epharmacy/presentations/cubits/cart/cart_cubit.dart';
@@ -223,6 +221,8 @@ class CheckoutPage extends StatelessWidget {
                                       StripeStatus.failure) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
+                                        duration: Duration(milliseconds: 1500),
+
                                         backgroundColor: Colors.red,
                                         content: Text(
                                           'Pembayaran Gagal : ${stripeState.errorMessage}',
@@ -242,6 +242,10 @@ class CheckoutPage extends StatelessWidget {
                                             context,
                                           ).showSnackBar(
                                             SnackBar(
+                                              duration: Duration(
+                                                milliseconds: 1500,
+                                              ),
+
                                               backgroundColor: Colors.red,
                                               content: Text(
                                                 orderState.errorMessage
@@ -257,6 +261,10 @@ class CheckoutPage extends StatelessWidget {
                                             context,
                                           ).showSnackBar(
                                             SnackBar(
+                                              duration: Duration(
+                                                milliseconds: 1500,
+                                              ),
+
                                               backgroundColor: Colors.green,
                                               content: Text('Success'),
                                             ),
@@ -284,9 +292,6 @@ class CheckoutPage extends StatelessWidget {
                                           onPressed: () {
                                             if (currentUser != null &&
                                                 address != null) {
-                                              log(
-                                                "Memulai Pembayaran Stripe...",
-                                              );
                                               context
                                                   .read<StripeCubit>()
                                                   .processStripePayment(
@@ -312,6 +317,10 @@ class CheckoutPage extends StatelessWidget {
                                                 context,
                                               ).showSnackBar(
                                                 SnackBar(
+                                                  duration: Duration(
+                                                    milliseconds: 1500,
+                                                  ),
+
                                                   content: Text(
                                                     'Data user atau alamat belum lengkap',
                                                   ),

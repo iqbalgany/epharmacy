@@ -209,9 +209,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         (route) => false,
                       );
-                    } else {
+                    }
+                    if (state.status == AuthStatus.failure) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          duration: Duration(milliseconds: 1500),
+
                           backgroundColor: Colors.red,
                           content: Text(
                             state.errorMessage ?? 'Authentication Error',
